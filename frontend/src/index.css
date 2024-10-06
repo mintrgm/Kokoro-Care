@@ -5,3 +5,8 @@
 .active hr {
     @apply block;
 }
+
+/* hide the scrollbar used in speciality menu */
+::-webkit-scrollbar {
+    @apply hidden
+}
