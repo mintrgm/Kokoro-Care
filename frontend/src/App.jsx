@@ -1,7 +1,7 @@
 import React from 'react'
 import {Routes, Route} from 'react-router-dom'
 import { About, Doctors, Home,Login, Contact, MyProfile, MyAppointments, Appointment } from './pages'
-import Navbar from './components/Navbar'
+import { Navbar, Footer } from './components'
 
 const App = () => {
   return (
@@ -19,6 +19,7 @@ const App = () => {
         <Route path='/appointment/:docId' element={<Appointment />} />
         
       </Routes>
+      <Footer />
     </div>
   )
 }
