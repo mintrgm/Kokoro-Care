@@ -4,7 +4,10 @@ import { createContext, useState } from "react";
 const AdminContext = createContext();
 
 const AdminContextProvider = ({ children }) => {
-  const [aToken, setAToken] = useState("");
+  // if aToken is not present then set aToken to empty string
+  const [aToken, setAToken] = useState(
+    localStorage.getItem("aToken") ? localStorage.getItem("aToken") : ""
+  );
   const backEndUrl = import.meta.env.VITE_BACKEND_URL;
 
   const value = { aToken, setAToken, backEndUrl };
