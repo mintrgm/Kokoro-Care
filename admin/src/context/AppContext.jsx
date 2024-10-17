@@ -4,13 +4,11 @@ const AppContext = createContext();
 
 // Context for App
 const AppContextProvider = (props) => {
-    const value = {}
+  const value = {};
 
-    return (
-        <AppContext.Provider value={value}>
-            {props.children}
-        </AppContext.Provider>
-    )
-}
+  return (
+    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
+  );
+};
 
-export default AppContextProvider
+export { AppContextProvider, AppContext };

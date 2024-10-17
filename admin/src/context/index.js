@@ -1,5 +1,12 @@
-import AdminContextProvider from "./AdminContext";
-import DoctorContextProvider from "./DoctorContext";
-import AppContextProvider from "./AppContext";
+import { AdminContextProvider, AdminContext } from "./AdminContext";
+import { DoctorContextProvider, DoctorContext } from "./DoctorContext";
+import { AppContextProvider, AppContext } from "./AppContext";
 
-export { AdminContextProvider, DoctorContextProvider, AppContextProvider };
+export {
+  AdminContextProvider,
+  DoctorContextProvider,
+  AppContextProvider,
+  AdminContext,
+  DoctorContext,
+  AppContext,
+};

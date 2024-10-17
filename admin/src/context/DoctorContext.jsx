@@ -11,4 +11,4 @@ const DoctorContextProvider = ({ children }) => {
   );
 };
 
-export default DoctorContextProvider;
+export { DoctorContextProvider, DoctorContext };
