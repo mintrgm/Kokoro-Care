@@ -113,4 +113,21 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-export { addDoctor, loginAdmin };
+// API to get all doctors list for admin panel
+const getAllDoctors = async (req, res) => {
+  try {
+    // get all doctors from database and exclude password field
+    const doctors = await doctorModel.find({}).select("-password");
+    if (doctors) {
+      res.json({ success: true, doctors });
+    } else {
+      console.log("no doctors found");
+      res.json({ success: false, message: "No doctors found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export { addDoctor, loginAdmin, getAllDoctors };
