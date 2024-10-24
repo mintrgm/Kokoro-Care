@@ -4,6 +4,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModels.js";
 import { v2 as cloudinary } from "cloudinary";
+import doctorModel from "../models/doctorModel.js";
+import appointmentModel from "../models/appointmentModel.js";
+
 const saltRounds = 10;
 
 // API to register user
@@ -146,4 +149,66 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, getUserProfile, updateUserProfile };
+// API to book appoinement
+const bookAppoinment = async (req, res) => {
+  try {
+    const { userId, docId, slotDate, slotTime } = req.body;
+    const docData = await doctorModel.findById(docId).select(["-password"]);
+    console.log("🚀 ~ bookAppoinment ~ docData:", docData);
+    if (!docData.available) {
+      return res.json({ success: false, message: "Doctor not available" });
+    }
+    // check if slot is available
+    const slotsBooked = docData.slots_booked;
+    if (slotsBooked[slotDate]) {
+      if (slotsBooked[slotDate].includes(slotTime)) {
+        return res.json({ success: false, message: "Slot already booked" });
+      } else {
+        slotsBooked[slotDate].push(slotTime);
+      }
+    } else {
+      // no slots booked for that date
+      slotsBooked[slotDate] = [];
+      slotsBooked[slotDate].push(slotTime);
+    }
+
+    const userData = await userModel.findById(userId).select(["-password"]);
+    // do not save doctor's appointment history
+    delete docData.slots_booked;
+
+    const appointmentData = {
+      userId,
+      docId,
+      slotDate,
+      slotTime,
+      userData,
+      docData,
+      amount: docData.fees,
+      bookingDate: Date.now(),
+    };
+
+    const newAppointment = new appointmentModel(appointmentData);
+    await newAppointment.save();
+
+    // save new slots data in doctor data
+    await doctorModel.findByIdAndUpdate(docId, {
+      slots_booked: slotsBooked,
+    });
+
+    return res.json({
+      success: true,
+      message: "Appoinment booked successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+export {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+  bookAppoinment,
+};
