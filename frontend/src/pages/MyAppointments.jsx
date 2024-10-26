@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const MyAppointments = () => {
   // dummy data
-  const { backEndUrl, token } = useContext(AppContext);
+  const { backEndUrl, token, getDoctorsData } = useContext(AppContext);
 
   const [appointments, setAppointments] = useState([]);
   const months = [
@@ -52,6 +52,30 @@ const MyAppointments = () => {
     }
   };
 
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(
+        `${backEndUrl}/api/user/cancel-appointment`,
+        { appointmentId },
+        {
+          headers: {
+            uToken: token,
+          },
+        }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        getUserAppointments();
+        getDoctorsData();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     getUserAppointments();
   }, [token]);
@@ -92,19 +116,30 @@ const MyAppointments = () => {
                 </p>
               </div>
               <div>{/* empty div to make it 2 columns for mobile view */}</div>
+
               <div className="flex flex-col gap-2 justify-end">
-                <button
-                  className="text-sm text-stone-500 text-center 
+                {!appointment.isCancelled && (
+                  <button
+                    className="text-sm text-stone-500 text-center 
                 sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300 "
-                >
-                  Pay Online
-                </button>
-                <button
-                  className="text-sm text-stone-500 text-center
+                  >
+                    Pay Online
+                  </button>
+                )}
+                {!appointment.isCancelled && (
+                  <button
+                    onClick={() => cancelAppointment(appointment._id)}
+                    className="text-sm text-stone-500 text-center
                 sm:min-w-48 py-2 border rounded hover:bg-red-500 hover:text-white transition-all duration-300 "
-                >
-                  Cancel Appointment
-                </button>
+                  >
+                    Cancel Appointment
+                  </button>
+                )}
+                {appointment.isCancelled && (
+                  <button className="sm:min-w-48 py-2 border border-red-500 rounded text-red-500">
+                    Appointment Cancelled
+                  </button>
+                )}
               </div>
             </div>
           ))}

@@ -223,6 +223,41 @@ const getUserAppointments = async (req, res) => {
   }
 };
 
+// API to cancel appoinment
+const cancelAppointment = async (req, res) => {
+  try {
+    const { userId, appointmentId } = req.body;
+    const appointmentData = await appointmentModel.findById(appointmentId);
+    // verify appointment is done by the user
+
+    if (appointmentData.userId.toString() !== userId) {
+      return res.json({ success: false, message: "Unauthorized access" });
+    }
+    await appointmentModel.findByIdAndUpdate(appointmentId, {
+      isCancelled: true,
+    });
+
+    // update slots booked in doctor data
+    const { docId, slotDate, slotTime } = appointmentData;
+    const docData = await doctorModel.findById(docId);
+    const slots_booked = docData.slots_booked;
+    console.log("🚀 ~ cancelAppointment ~ slots_booked:", slots_booked);
+
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (slot) => slot !== slotTime
+    );
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+
+    return res.json({
+      success: true,
+      message: "Appoinment cancelled successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -230,4 +265,5 @@ export {
   updateUserProfile,
   bookAppoinment,
   getUserAppointments,
+  cancelAppointment,
 };

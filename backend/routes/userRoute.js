@@ -5,6 +5,7 @@ import {
   updateUserProfile,
   bookAppoinment,
   getUserAppointments,
+  cancelAppointment,
 } from "../controllers/userController.js";
 import express from "express";
 import { authUser, upload } from "../middlewares/index.js";
@@ -24,4 +25,6 @@ userRouter.post(
 
 userRouter.post("/book-appointment", authUser, bookAppoinment);
 userRouter.get("/appointments", authUser, getUserAppointments);
+
+userRouter.post("/cancel-appointment", authUser, cancelAppointment);
 export default userRouter;
