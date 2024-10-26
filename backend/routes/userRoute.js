@@ -4,6 +4,7 @@ import {
   getUserProfile,
   updateUserProfile,
   bookAppoinment,
+  getUserAppointments,
 } from "../controllers/userController.js";
 import express from "express";
 import { authUser, upload } from "../middlewares/index.js";
@@ -22,5 +23,5 @@ userRouter.post(
 );
 
 userRouter.post("/book-appointment", authUser, bookAppoinment);
-
+userRouter.get("/appointments", authUser, getUserAppointments);
 export default userRouter;
