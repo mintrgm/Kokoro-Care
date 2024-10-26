@@ -11,9 +11,9 @@ const Appointment = () => {
   const navigate = useNavigate();
   const { doctors, currencySymbol, backEndUrl, getDoctorsData, token } =
     useContext(AppContext);
-  const [docInfo, setDocInfo] = useState(null);
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+  const [docInfo, setDocInfo] = useState(null);
   const [docSlots, setDocSlots] = useState([]);
   const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState("");
@@ -23,9 +23,8 @@ const Appointment = () => {
     setDocInfo(doc);
   };
 
-  const getAvailableSlots = () => {
+  const getAvailableSlots = async () => {
     setDocSlots([]);
-
     const today = new Date();
     for (let i = 0; i < 7; i++) {
       // getting next 7 days
@@ -57,10 +56,30 @@ const Appointment = () => {
           hour: "2-digit",
           minute: "2-digit",
         });
-        timeSlots.push({
+        let day = currentDate.getDate();
+        let month = currentDate.getMonth() + 1;
+        let year = currentDate.getFullYear();
+        let slotDate = day + "_" + month + "_" + year;
+        let slotTime = formattedTime;
+
+        const isSlotAvailable =
+          docInfo.slots_booked[slotDate] &&
+          docInfo.slots_booked[slotDate].includes(slotTime)
+            ? false
+            : true;
+
+        // show only avilable slots to users
+        if (isSlotAvailable) {
+          timeSlots.push({
+            dateTime: new Date(currentDate),
+            time: formattedTime,
+          });
+        }
+
+        /*  timeSlots.push({
           dateTime: new Date(currentDate),
           time: formattedTime,
-        });
+        }); */
         // increment time by 30 minutes
         currentDate.setMinutes(currentDate.getMinutes() + 30);
       }
@@ -75,7 +94,7 @@ const Appointment = () => {
     }
     try {
       const date = docSlots[slotIndex][0].dateTime;
-      let day = date.getDay();
+      let day = date.getDate();
       let month = date.getMonth() + 1;
       let year = date.getFullYear();
       const slotDate = day + "_" + month + "_" + year;
@@ -103,11 +122,15 @@ const Appointment = () => {
   };
 
   useEffect(() => {
-    fetchDocInfo();
+    if (doctors.length > 0) {
+      fetchDocInfo();
+    }
   }, [docId, doctors]);
 
   useEffect(() => {
-    getAvailableSlots();
+    if (docInfo) {
+      getAvailableSlots();
+    }
   }, [docInfo]);
 
   return (
