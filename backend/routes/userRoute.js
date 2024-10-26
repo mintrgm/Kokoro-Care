@@ -6,6 +6,8 @@ import {
   bookAppoinment,
   getUserAppointments,
   cancelAppointment,
+  paymentHandler,
+  verifyPayment,
 } from "../controllers/userController.js";
 import express from "express";
 import { authUser, upload } from "../middlewares/index.js";
@@ -27,4 +29,8 @@ userRouter.post("/book-appointment", authUser, bookAppoinment);
 userRouter.get("/appointments", authUser, getUserAppointments);
 
 userRouter.post("/cancel-appointment", authUser, cancelAppointment);
+userRouter.post("/payment", authUser, paymentHandler);
+
+userRouter.post("/verify-payment", authUser, verifyPayment);
+
 export default userRouter;

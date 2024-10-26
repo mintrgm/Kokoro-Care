@@ -6,6 +6,7 @@ import userModel from "../models/userModels.js";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
+import Razorpay from "razorpay";
 
 const saltRounds = 10;
 
@@ -241,7 +242,6 @@ const cancelAppointment = async (req, res) => {
     const { docId, slotDate, slotTime } = appointmentData;
     const docData = await doctorModel.findById(docId);
     const slots_booked = docData.slots_booked;
-    console.log("🚀 ~ cancelAppointment ~ slots_booked:", slots_booked);
 
     slots_booked[slotDate] = slots_booked[slotDate].filter(
       (slot) => slot !== slotTime
@@ -258,6 +258,60 @@ const cancelAppointment = async (req, res) => {
   }
 };
 
+// API to make payment of appointment using razorpay
+const razorpayInstance = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
+
+const paymentHandler = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+    const appointmentData = await appointmentModel.findById(appointmentId);
+    if (!appointmentData || appointmentData.isCancelled) {
+      return res.json({
+        success: false,
+        message: "Appointment cancelled or not found!",
+      });
+    }
+
+    // Creating options for razorpay
+    const options = {
+      amount: appointmentData.amount * 100,
+      currency: process.env.CURRENCY,
+      receipt: appointmentId,
+    };
+    // create order
+    const order = await razorpayInstance.orders.create(options);
+
+    res.json({ success: true, order });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.error.description });
+  }
+};
+
+// API to verify payment via razorpay
+const verifyPayment = async (req, res) => {
+  try {
+    const { razorpay_order_id } = req.body;
+    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+    console.log(orderInfo);
+
+    if (orderInfo.status === "paid") {
+      await appointmentModel.findByIdAndUpdate(orderInfo.receipt, {
+        isPaymentDone: true,
+      });
+      return res.json({ success: true, message: "Payment Successful" });
+    } else {
+      return res.json({ success: false, message: "Payment Failed" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -266,4 +320,6 @@ export {
   bookAppoinment,
   getUserAppointments,
   cancelAppointment,
+  paymentHandler,
+  verifyPayment,
 };

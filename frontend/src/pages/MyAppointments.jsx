@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -22,6 +23,7 @@ const MyAppointments = () => {
     "Nov",
     "Dec",
   ];
+  const navigate = useNavigate();
 
   const slotDateFormat = (date) => {
     const dateArray = date.split("_");
@@ -76,6 +78,69 @@ const MyAppointments = () => {
     }
   };
 
+  const initPay = (order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY, // Enter the Key ID generated from the Dashboard
+      amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: order.currency,
+      name: "Appointment Payment",
+      description: "Appointment Payment",
+      order_id: order.id, //order id received in response
+      callback_url: "https://eneqd3r9zrjok.x.pipedream.net/",
+      receipt: order.receipt,
+      handler: async (response) => {
+        // response received after payment
+        console.log(response);
+        try {
+          const { data } = await axios.post(
+            `${backEndUrl}/api/user/verify-payment`,
+            response,
+            {
+              headers: {
+                uToken: token,
+              },
+            }
+          );
+          if (data.success) {
+            getUserAppointments();
+            navigate("/appointments");
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error.message);
+        }
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+  const paymentHandler = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(
+        `${backEndUrl}/api/user/payment`,
+        { appointmentId },
+        {
+          headers: {
+            uToken: token,
+          },
+        }
+      );
+      if (data.success) {
+        console.log(data.order);
+        initPay(data.order);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     getUserAppointments();
   }, [token]);
@@ -118,8 +183,14 @@ const MyAppointments = () => {
               <div>{/* empty div to make it 2 columns for mobile view */}</div>
 
               <div className="flex flex-col gap-2 justify-end">
-                {!appointment.isCancelled && (
+                {!appointment.isCancelled && appointment.isPaymentDone && (
+                  <button className="sm:min-w-48 py-2 border bg-indigo-50 rounded text-stone-500">
+                    Paid
+                  </button>
+                )}
+                {!appointment.isCancelled && !appointment.isPaymentDone && (
                   <button
+                    onClick={() => paymentHandler(appointment._id)}
                     className="text-sm text-stone-500 text-center 
                 sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300 "
                   >
