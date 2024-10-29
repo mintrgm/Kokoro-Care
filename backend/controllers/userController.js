@@ -6,7 +6,10 @@ import userModel from "../models/userModels.js";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
-import Razorpay from "razorpay";
+import {
+  initializePayment,
+  verifyPaymentAuthenticity,
+} from "../config/paytm/managePayment.js";
 
 const saltRounds = 10;
 
@@ -259,10 +262,10 @@ const cancelAppointment = async (req, res) => {
 };
 
 // API to make payment of appointment using razorpay
-const razorpayInstance = new Razorpay({
+/* const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY,
   key_secret: process.env.RAZORPAY_SECRET,
-});
+}); */
 
 const paymentHandler = async (req, res) => {
   try {
@@ -312,6 +315,92 @@ const verifyPayment = async (req, res) => {
   }
 };
 
+const paytmPaymentHandler = async (req, res) => {
+  return res.json({ success: true, message: "TestPayment Successful" });
+
+  try {
+    const { appointmentId } = req.body;
+    const orderId = `${appointmentId}_${new Date().getTime()}`;
+    const appointmentData = await appointmentModel.findById(appointmentId);
+
+    if (!appointmentData || appointmentData.isCancelled) {
+      return res.json({
+        success: false,
+        message: "Appointment cancelled or not found!",
+      });
+    }
+
+    //create paytmParams for generating checksumhash and txnToken.
+    let paytmParams = {};
+    paytmParams.body = {
+      requestType: "Payment",
+      mid: process.env.PAYTM_MID,
+      websiteName: process.env.PAYTM_WEBSITE_STAGING,
+      orderId,
+      callbackUrl: "http://localhost:4000/verify-payment",
+      txnAmount: {
+        value: appointmentData.amount,
+        currency: process.env.CURRENCY,
+      },
+      userInfo: {
+        custId: appointmentData.userData._id.toString(),
+        email: appointmentData.userData.email,
+        firstName: appointmentData.userData.name,
+      },
+    };
+
+    console.log("🚀 ~ paytmPaymentHandler ~ paytmParams:", paytmParams);
+    let txnInfo = await initializePayment(paytmParams);
+    console.log("🚀 ~ paytmPaymentHandler ~ txnInfo:", txnInfo);
+    txnInfo = JSON.parse(txnInfo);
+
+    // check txnInfo
+    //check of transaction token generated successfully
+    if (txnInfo && txnInfo.body.resultInfo.resultStatus == "S") {
+      //transaction initiation successful.
+      //sending redirect to paytm page form with hidden inputs.
+      const hiddenInput = {
+        txnToken: txnInfo.body.txnToken,
+        mid: process.env.PAYTM_MID,
+        orderId,
+      };
+      res.render("intermediateForm.ejs", { hiddenInput });
+    } else {
+      //payment initialization failed.
+      //send custom response
+      //donot send this response. for debugging purpose only.
+      res.json({ success: false, message: "Payment Failed" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+const paytmVerifyPayment = async (req, res) => {
+  try {
+    //req.body contains all data sent by paytm related to payment.
+    //check checksumhash to verify transaction is not tampared.
+    const paymentObject = await verifyPaymentAuthenticity(req.body);
+    if (paymentObject) {
+      console.log("🚀 ~ paytmVerifyPayment ~ paymentObject:", paymentObject);
+      /* check for required status */
+      if (paymentObject.body.resultInfo.resultStatus === "TXN_SUCCESS") {
+        // payment success
+      }
+      res.send(
+        '<h1 style="text-align: center;">Payment Successful.</h1><h3 style="text-align: center;">Process it in backend according to need.</h3><h3 style="text-align:center;"><a href="/" style="text-align: center;">click here</a> to go to home page.</h3>'
+      );
+    } else {
+      res.send(
+        '<h1 style="text-align: center;color: red;">Payment Tampered.</h1><h3 style="text-align: center;">CHECKSUMHASH not matched.</h3> <h3 style="text-align: center;><a href="/">click here</a> to go to home page.</h3>'
+      );
+    }
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -322,4 +411,6 @@ export {
   cancelAppointment,
   paymentHandler,
   verifyPayment,
+  paytmPaymentHandler,
+  paytmVerifyPayment,
 };

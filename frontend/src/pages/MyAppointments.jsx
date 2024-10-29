@@ -131,7 +131,7 @@ const MyAppointments = () => {
       );
       if (data.success) {
         console.log(data.order);
-        initPay(data.order);
+        // initPay(data.order);
       } else {
         toast.error(data.message);
       }
