@@ -21,7 +21,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.home_icon} alt="admin home" />
-            <p>Dashboard</p>
+            <p className="hidden md:block">Dashboard</p>
           </NavLink>
           <NavLink
             to={"/all-appointments"}
@@ -32,7 +32,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.appointment_icon} alt="appointments" />
-            <p>Appointments</p>
+            <p className="hidden md:block">Appointments</p>
           </NavLink>
           <NavLink
             to={"/add-doctor"}
@@ -43,7 +43,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.add_icon} alt="add doctor" />
-            <p>Add Doctor</p>
+            <p className="hidden md:block">Add Doctor</p>
           </NavLink>
           <NavLink
             to={"/doctors-list"}
@@ -54,7 +54,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.people_icon} alt="doctors list" />
-            <p>Doctors List</p>
+            <p className="hidden md:block">Doctors List</p>
           </NavLink>
         </ul>
       )}
@@ -71,7 +71,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.home_icon} alt="doctor home" />
-            <p>Dashboard</p>
+            <p className="hidden md:block">Dashboard</p>
           </NavLink>
           <NavLink
             to={"/doctor-appointments"}
@@ -82,7 +82,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.appointment_icon} alt="appointments" />
-            <p>Appointments</p>
+            <p className="hidden md:block">Appointments</p>
           </NavLink>
           <NavLink
             to={"/doctor-profile"}
@@ -93,7 +93,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.people_icon} alt="doctor profile" />
-            <p>Profile</p>
+            <p className="hidden md:block">Profile</p>
           </NavLink>
         </ul>
       )}
