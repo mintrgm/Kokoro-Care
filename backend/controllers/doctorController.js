@@ -77,9 +77,49 @@ const getDoctorAppointments = async (req, res) => {
   }
 };
 
+// API to mark appointment as completed for doctor panel
+const appointmentCompleted = async (req, res) => {
+  try {
+    const { appointmentId, docId } = req.body;
+    const appointmentData = await appointmentModel.findById(appointmentId);
+    if (appointmentData && appointmentData.docId === docId) {
+      await appointmentModel.findByIdAndUpdate(appointmentId, {
+        isCompleted: true,
+      });
+      res.json({ success: true, message: "Appointment completed" });
+    } else {
+      res.json({ success: false, message: "Invalid appointment" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// API to cancel appointment for doctor panel
+const cancelAppointment = async (req, res) => {
+  try {
+    const { appointmentId, docId } = req.body;
+    const appointmentData = await appointmentModel.findById(appointmentId);
+    if (appointmentData && appointmentData.docId === docId) {
+      await appointmentModel.findByIdAndUpdate(appointmentId, {
+        isCancelled: true,
+      });
+      res.json({ success: true, message: "Appointment cancelled" });
+    } else {
+      res.json({ success: false, message: "Invalid appointment" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
 export {
   changeAvailability,
   getDoctorsList,
   loginDoctor,
   getDoctorAppointments,
+  appointmentCompleted,
+  cancelAppointment,
 };

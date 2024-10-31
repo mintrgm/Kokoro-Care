@@ -3,7 +3,13 @@ import { DoctorContext, AppContext } from "../../context/";
 import { assets } from "../../assets/assets";
 
 const DoctorAppointments = () => {
-  const { dToken, getAppointments, appointments } = useContext(DoctorContext);
+  const {
+    dToken,
+    getAppointments,
+    appointments,
+    completeAppointment,
+    cancelAppointment,
+  } = useContext(DoctorContext);
   const { calculateAge, slotDateFormat, currency } = useContext(AppContext);
 
   useEffect(() => {
@@ -26,7 +32,7 @@ const DoctorAppointments = () => {
           <p>Action</p>
         </div>
         {appointments &&
-          appointments.map((appointment, index) => (
+          appointments.reverse().map((appointment, index) => (
             <div
               className="flex flex-wrap justify-between max-sm:gap-5 max-sm:text-base sm:grid grid-cols-[0.5fr_2fr_1fr_1fr_3fr_1fr_1fr] gap-1 items-center py-3 px-6 text-gray-500 border-b hover:bg-gray-100"
               key={appointment._id}
@@ -54,18 +60,27 @@ const DoctorAppointments = () => {
               <p>
                 {currency} {appointment.amount}
               </p>
-              <div className="flex">
-                <img
-                  className="w-10 cursor-pointer"
-                  src={assets.cancel_icon}
-                  alt="Cancel"
-                />
-                <img
-                  className="w-10 cursor-pointer"
-                  src={assets.tick_icon}
-                  alt="Accept"
-                />
-              </div>
+
+              {appointment.isCancelled ? (
+                <p className="text-red-400 text-xs font-medium">Cancelled</p>
+              ) : appointment.isCompleted ? (
+                <p className="text-green-400 text-xs font-medium">Completed</p>
+              ) : (
+                <div className="flex">
+                  <img
+                    className="w-10 cursor-pointer"
+                    src={assets.cancel_icon}
+                    alt="Cancel"
+                    onClick={() => cancelAppointment(appointment._id)}
+                  />
+                  <img
+                    className="w-10 cursor-pointer"
+                    src={assets.tick_icon}
+                    alt="Accept"
+                    onClick={() => completeAppointment(appointment._id)}
+                  />
+                </div>
+              )}
             </div>
           ))}
       </div>
