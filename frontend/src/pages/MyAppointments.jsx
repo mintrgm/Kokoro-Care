@@ -45,7 +45,7 @@ const MyAppointments = () => {
       });
 
       if (data.success) {
-        setAppointments(data.appointments.reverse());
+        setAppointments(data.appointments);
       }
       console.log(appointments);
     } catch (error) {

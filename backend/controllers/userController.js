@@ -214,7 +214,9 @@ const getUserAppointments = async (req, res) => {
   try {
     const { userId } = req.body;
 
-    const appointments = await appointmentModel.find({ userId });
+    const appointments = await appointmentModel.find({ userId }).sort({
+      slotDate: -1,
+    });
 
     if (appointments) {
       return res.json({ success: true, appointments });

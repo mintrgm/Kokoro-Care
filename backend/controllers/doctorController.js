@@ -66,9 +66,11 @@ const loginDoctor = async (req, res) => {
 const getDoctorAppointments = async (req, res) => {
   try {
     const { docId } = req.body;
-    console.log("🚀 ~ getDoctorAppointments ~ docId:", docId);
-    const appointments = await appointmentModel.find({ docId });
-    console.log("🚀 ~ getDoctorAppointments ~ appointments:", appointments);
+
+    const appointments = await appointmentModel.find({ docId }).sort({
+      slotDate: "asc",
+      slotTime: "asc",
+    });
 
     res.json({ success: true, appointments });
   } catch (error) {
@@ -119,7 +121,10 @@ const cancelAppointment = async (req, res) => {
 const doctorDashboard = async (req, res) => {
   try {
     const { docId } = req.body;
-    const appointments = await appointmentModel.find({ docId });
+    const appointments = await appointmentModel.find({ docId }).sort({
+      slotDate: "asc",
+      slotTime: "asc",
+    });
 
     let earnings = 0;
     appointments.map((appointment) => {

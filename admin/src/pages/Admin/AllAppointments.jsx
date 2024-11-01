@@ -67,6 +67,8 @@ const AllAppointments = () => {
             <>
               {appointment.isCancelled ? (
                 <p className="text-red-400 text-xs font-medium">Cancelled</p>
+              ) : appointment.isCompleted ? (
+                <p className="text-green-400 text-xs font-medium">Completed</p>
               ) : (
                 <p>
                   <img

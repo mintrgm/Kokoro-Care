@@ -136,7 +136,9 @@ const getAllDoctors = async (req, res) => {
 const getAllAppointments = async (req, res) => {
   try {
     // get all appointments from database
-    const appointments = await appointmentModel.find({});
+    const appointments = await appointmentModel
+      .find({})
+      .sort({ slotDate: "asc", slotTime: "asc" });
     if (appointments) {
       res.json({ success: true, appointments });
     } else {
@@ -183,7 +185,9 @@ const cancelAppointment = async (req, res) => {
 const adminDashboard = async (req, res) => {
   try {
     const doctors = await doctorModel.find({});
-    const appointments = await appointmentModel.find({});
+    const appointments = await appointmentModel
+      .find({})
+      .sort({ slotDate: "asc", slotTime: "asc" });
     const users = await userModel.find({});
 
     const dashData = {
