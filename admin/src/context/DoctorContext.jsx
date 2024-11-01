@@ -12,6 +12,7 @@ const DoctorContextProvider = ({ children }) => {
   );
   const [appointments, setAppointments] = useState([]);
   const [dashData, setDashData] = useState(false);
+  const [profile, setProfile] = useState(false);
 
   const getAppointments = async () => {
     try {
@@ -88,6 +89,23 @@ const DoctorContextProvider = ({ children }) => {
     }
   };
 
+  const getProfile = async () => {
+    try {
+      const { data } = await axios.get(`${backEndUrl}/api/doctor/profile`, {
+        headers: { dToken },
+      });
+      if (data.success) {
+        setProfile(data.profileData);
+        console.log(data.profileData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
   const value = {
     dToken,
     setDToken,
@@ -98,6 +116,9 @@ const DoctorContextProvider = ({ children }) => {
     cancelAppointment,
     getDashboardData,
     dashData,
+    getProfile,
+    profile,
+    setProfile,
   };
 
   return (
