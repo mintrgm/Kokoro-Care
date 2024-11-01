@@ -351,9 +351,8 @@ const paytmPaymentHandler = async (req, res) => {
       },
     };
 
-    console.log("🚀 ~ paytmPaymentHandler ~ paytmParams:", paytmParams);
     let txnInfo = await initializePayment(paytmParams);
-    console.log("🚀 ~ paytmPaymentHandler ~ txnInfo:", txnInfo);
+
     txnInfo = JSON.parse(txnInfo);
 
     // check txnInfo
@@ -385,7 +384,6 @@ const paytmVerifyPayment = async (req, res) => {
     //check checksumhash to verify transaction is not tampared.
     const paymentObject = await verifyPaymentAuthenticity(req.body);
     if (paymentObject) {
-      console.log("🚀 ~ paytmVerifyPayment ~ paymentObject:", paymentObject);
       /* check for required status */
       if (paymentObject.body.resultInfo.resultStatus === "TXN_SUCCESS") {
         // payment success
