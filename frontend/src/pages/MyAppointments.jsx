@@ -183,21 +183,25 @@ const MyAppointments = () => {
               <div>{/* empty div to make it 2 columns for mobile view */}</div>
 
               <div className="flex flex-col gap-2 justify-end">
-                {!appointment.isCancelled && appointment.isPaymentDone && (
-                  <button className="sm:min-w-48 py-2 border bg-indigo-50 rounded text-stone-500">
-                    Paid
-                  </button>
-                )}
-                {!appointment.isCancelled && !appointment.isPaymentDone && (
-                  <button
-                    onClick={() => paymentHandler(appointment._id)}
-                    className="text-sm text-stone-500 text-center 
+                {!appointment.isCancelled &&
+                  appointment.isPaymentDone &&
+                  !appointment.isCompleted && (
+                    <button className="sm:min-w-48 py-2 border bg-indigo-50 rounded text-stone-500">
+                      Paid
+                    </button>
+                  )}
+                {!appointment.isCancelled &&
+                  !appointment.isPaymentDone &&
+                  !appointment.isCompleted && (
+                    <button
+                      onClick={() => paymentHandler(appointment._id)}
+                      className="text-sm text-stone-500 text-center 
                 sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300 "
-                  >
-                    Pay Online
-                  </button>
-                )}
-                {!appointment.isCancelled && (
+                    >
+                      Pay Online
+                    </button>
+                  )}
+                {!appointment.isCancelled && !appointment.isCompleted && (
                   <button
                     onClick={() => cancelAppointment(appointment._id)}
                     className="text-sm text-stone-500 text-center
@@ -209,6 +213,11 @@ const MyAppointments = () => {
                 {appointment.isCancelled && (
                   <button className="sm:min-w-48 py-2 border border-red-500 rounded text-red-500">
                     Appointment Cancelled
+                  </button>
+                )}
+                {appointment.isCompleted && (
+                  <button className="sm:min-w-48 py-2 border border-green-500 rounded text-green-500">
+                    Appointment Completed
                   </button>
                 )}
               </div>
