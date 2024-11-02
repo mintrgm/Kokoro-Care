@@ -1,12 +1,14 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { AppContext } from "./AppContext";
 
 // Context for Doctor login and token
 const DoctorContext = createContext();
 
 const DoctorContextProvider = ({ children }) => {
-  const backEndUrl = import.meta.env.VITE_BACKEND_URL;
+  // const backEndUrl = import.meta.env.VITE_BACKEND_URL;
+  const { backEndUrl } = useContext(AppContext);
   const [dToken, setDToken] = useState(
     localStorage.getItem("dToken") ? localStorage.getItem("dToken") : ""
   );
@@ -106,7 +108,6 @@ const DoctorContextProvider = ({ children }) => {
   const value = {
     dToken,
     setDToken,
-    backEndUrl,
     getAppointments,
     appointments,
     completeAppointment,

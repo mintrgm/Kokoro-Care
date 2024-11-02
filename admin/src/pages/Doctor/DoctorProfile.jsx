@@ -4,9 +4,8 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 const DoctorProfile = () => {
-  const { dToken, profile, getProfile, setProfile, backEndUrl } =
-    useContext(DoctorContext);
-  const { currency } = useContext(AppContext);
+  const { dToken, profile, getProfile, setProfile } = useContext(DoctorContext);
+  const { currency, backEndUrl } = useContext(AppContext);
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {

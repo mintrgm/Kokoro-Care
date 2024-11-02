@@ -2,14 +2,14 @@ import { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { DoctorContext, AdminContext } from "../context";
+import { DoctorContext, AdminContext, AppContext } from "../context";
 
 const Login = () => {
   const [state, setState] = useState("Admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const { setAToken, backEndUrl } = useContext(AdminContext);
+  const { backEndUrl } = useContext(AppContext);
+  const { setAToken } = useContext(AdminContext);
   const { setDToken } = useContext(DoctorContext);
 
   const submitHandler = async (e) => {

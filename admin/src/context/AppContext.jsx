@@ -39,9 +39,10 @@ const AppContextProvider = (props) => {
     );
   };
 
-  const currency = "Rs.";
+  const currency = import.meta.env.VITE_CURRENCY;
+  const backEndUrl = import.meta.env.VITE_BACKEND_URL;
 
-  const value = { calculateAge, slotDateFormat, currency };
+  const value = { calculateAge, slotDateFormat, currency, backEndUrl };
 
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>

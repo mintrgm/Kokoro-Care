@@ -10,12 +10,12 @@ import {
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <AdminContextProvider>
+    <AppContextProvider>
       <DoctorContextProvider>
-        <AppContextProvider>
+        <AdminContextProvider>
           <App />
-        </AppContextProvider>
+        </AdminContextProvider>
       </DoctorContextProvider>
-    </AdminContextProvider>
+    </AppContextProvider>
   </BrowserRouter>
 );

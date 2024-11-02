@@ -1,6 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { AppContext } from "./AppContext";
 
 // Context for Admin login and token
 const AdminContext = createContext();
@@ -14,8 +15,9 @@ const AdminContextProvider = ({ children }) => {
   const [appointments, setAppointments] = useState([]);
   const [dashData, setDashData] = useState(false);
 
-  const backEndUrl = import.meta.env.VITE_BACKEND_URL;
+  // const backEndUrl = import.meta.env.VITE_BACKEND_URL;
 
+  const { backEndUrl } = useContext(AppContext);
   const getAllDoctors = async () => {
     try {
       const { data } = await axios.get(`${backEndUrl}/api/admin/all-doctors`, {
