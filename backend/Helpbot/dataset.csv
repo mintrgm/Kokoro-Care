@@ -1,0 +1,66 @@
+text,intent
+hi,greeting
+hello,greeting
+hey,greeting
+good morning,greeting
+good evening,greeting
+howdy,greeting
+yo,greeting
+create an account,create_account
+sign up,create_account
+register me,create_account
+i want to create an account,create_account
+can i create an account,create_account
+login,login
+sign in,login
+log me in,login
+i want to login,login
+book an appointment,booking
+book appointment,booking
+schedule appointment,booking
+appointment with doctor,booking
+book doctor,booking
+i want to book a doctor,booking
+book a doctor for me,booking
+online appointment,booking
+in-person appointment,booking
+pay online,online_payment
+make payment,online_payment
+complete payment,online_payment
+pay for my appointment,online_payment
+join video call,video_call
+video call,video_call
+join online session,video_call
+start my online appointment,video_call
+edit profile,edit_profile
+update profile,edit_profile
+change my profile info,edit_profile
+change password,change_password
+reset password,change_password
+forgot password,change_password
+talk to baymax,talk_medical_bot
+medical help,baymax_medical
+i need medical advice,baymax_medical
+cancel my appointment,cancel_appointment
+reschedule appointment,cancel_appointment
+i want to cancel my appointment,cancel_appointment
+what does this app do,about_app
+features of this app,about_app
+how does this app work,about_app
+what can i do here,services
+what services do you offer,services
+tell me your services,services
+services?,services
+thanks,thanks
+thank you,thanks
+thx,thanks
+bye,goodbye
+goodbye,goodbye
+see you,goodbye
+are you real,unknown
+who is your boss,unknown
+stupid question,unknown
+book a teacher,unknown
+school booking,unknown
+what is the meaning of life,unknown
+random question,unknown

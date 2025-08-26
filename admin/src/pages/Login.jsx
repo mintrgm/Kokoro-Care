@@ -1,58 +1,45 @@
-import { useContext, useState } from "react";
-import { assets } from "../assets/assets";
-import axios from "axios";
+import { useState } from "react";
+import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
-import { DoctorContext, AdminContext, AppContext } from "../context";
 
-const Login = () => {
+const Login = ({ setUserRole }) => {
   const [state, setState] = useState("Admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { backEndUrl } = useContext(AppContext);
-  const { setAToken } = useContext(AdminContext);
-  const { setDToken } = useContext(DoctorContext);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      if (state === "Admin") {
-        const { data } = await axios.post(`${backEndUrl}/api/admin/login`, {
-          email,
-          password,
-        });
+      const endpoint =
+        state === "Admin" ? "/api/admin/login" : "/api/doctor/login";
 
-        if (data.success) {
-          localStorage.setItem("aToken", data.token);
-          setAToken(data.token);
-          toast.success("Login Successful");
+      const { data } = await axiosInstance.post(
+        endpoint,
+        { email, password },
+        { withCredentials: true }
+      );
+
+      if (data.success) {
+        toast.success("Login Successful");
+        if (state === "Admin") {
+          setUserRole("admin"); 
+          window.location.href = "/admin-dashboard";
         } else {
-          toast.error(data.message);
+          setUserRole("doctor"); 
+          window.location.href = "/doctor-dashboard";
         }
       } else {
-        // doctor login
-        const { data } = await axios.post(`${backEndUrl}/api/doctor/login`, {
-          email,
-          password,
-        });
-        if (data.success) {
-          localStorage.setItem("dToken", data.token);
-          setDToken(data.token);
-          toast.success("Login Successful");
-        } else {
-          toast.error(data.message);
-        }
+        toast.error(data.message);
       }
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong");
     }
   };
 
   return (
     <form className="min-h-[80vh] flex items-center" onSubmit={submitHandler}>
-      <div
-        className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] 
-      sm:min-w-96 border rounded-xl text-zinc-600 text-sm shadow-lg"
-      >
+      <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-zinc-600 text-sm shadow-lg">
         <p className="text-2xl font-semibold m-auto">
           <span className="text-primary">{state}</span> Login
         </p>
@@ -63,9 +50,7 @@ const Login = () => {
             name="email"
             className="border border-[#DADADA] rounded w-full p-2 mt-1"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
@@ -76,9 +61,7 @@ const Login = () => {
             name="password"
             className="border border-[#DADADA] rounded w-full p-2 mt-1"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>

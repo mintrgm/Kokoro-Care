@@ -19,7 +19,6 @@ const doctorSchema = new mongoose.Schema(
   { timestamps: true, minimize: false }
 );
 
-// if model already exists, use it, otherwise create a new one
 const doctorModel =
   mongoose.models.doctor || mongoose.model("doctor", doctorSchema);
 

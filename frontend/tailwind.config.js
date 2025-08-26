@@ -4,7 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#5f6fff",
+        primary: "#344d6e",
+      },
+      fontFamily: {
+        offside: ['Offside', 'cursive'],
+        margarine: ['Margarine', 'cursive'], 
       },
       gridTemplateColumns: {
         auto: "repeat(auto-fill,minmax(200px,1fr))",

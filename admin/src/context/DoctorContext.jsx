@@ -1,37 +1,31 @@
-import { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "./AppContext";
+import PropTypes from "prop-types";
 
-// Context for Doctor login and token
 const DoctorContext = createContext();
 
 const DoctorContextProvider = ({ children }) => {
-  // const backEndUrl = import.meta.env.VITE_BACKEND_URL;
   const { backEndUrl } = useContext(AppContext);
-  const [dToken, setDToken] = useState(
-    localStorage.getItem("dToken") ? localStorage.getItem("dToken") : ""
-  );
+
   const [appointments, setAppointments] = useState([]);
-  const [dashData, setDashData] = useState(false);
-  const [profile, setProfile] = useState(false);
+  const [dashboard, setDashboard] = useState(null);
+  const [profile, setProfile] = useState(null);
 
   const getAppointments = async () => {
     try {
-      const { data } = await axios.get(
-        `${backEndUrl}/api/doctor/appointments`,
-        {
-          headers: { dToken },
-        }
-      );
+      const { data } = await axios.get(`${backEndUrl}/api/doctor/appointments`, {
+        withCredentials: true,
+      });
       if (data.success) {
         setAppointments(data.appointments);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error(error);
+      toast.error(error.message || "Failed to fetch appointments");
     }
   };
 
@@ -40,7 +34,7 @@ const DoctorContextProvider = ({ children }) => {
       const { data } = await axios.post(
         `${backEndUrl}/api/doctor/complete-appointment`,
         { appointmentId },
-        { headers: { dToken } }
+        { withCredentials: true }
       );
       if (data.success) {
         toast.success(data.message);
@@ -49,8 +43,8 @@ const DoctorContextProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error(error);
+      toast.error(error.message || "Failed to complete appointment");
     }
   };
 
@@ -59,7 +53,7 @@ const DoctorContextProvider = ({ children }) => {
       const { data } = await axios.post(
         `${backEndUrl}/api/doctor/cancel-appointment`,
         { appointmentId },
-        { headers: { dToken } }
+        { withCredentials: true }
       );
       if (data.success) {
         toast.success(data.message);
@@ -68,60 +62,68 @@ const DoctorContextProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error(error);
+      toast.error(error.message || "Failed to cancel appointment");
     }
   };
 
-  const getDashboardData = async () => {
+  const getDashboard = async () => {
     try {
       const { data } = await axios.get(`${backEndUrl}/api/doctor/dashboard`, {
-        headers: { dToken },
+        withCredentials: true,
       });
+      console.log("Dashboard API response:", data);
       if (data.success) {
-        setDashData(data.dashData);
+        setDashboard(data.dashData ?? data.dashboard ?? null);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error(error);
+      toast.error(error.message || "Failed to fetch dashboard data");
     }
   };
 
   const getProfile = async () => {
     try {
       const { data } = await axios.get(`${backEndUrl}/api/doctor/profile`, {
-        headers: { dToken },
+        withCredentials: true,
       });
+      console.log("getProfile response:", data);
       if (data.success) {
         setProfile(data.profileData);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error("getProfile error:", error);
+      toast.error(error.message || "Failed to fetch profile");
     }
   };
 
   const value = {
-    dToken,
-    setDToken,
-    getAppointments,
     appointments,
-    completeAppointment,
-    cancelAppointment,
-    getDashboardData,
-    dashData,
-    getProfile,
+    dashboard,
     profile,
     setProfile,
+    getAppointments,
+    completeAppointment,
+    cancelAppointment,
+    getDashboard,
+    getProfile,
   };
 
   return (
-    <DoctorContext.Provider value={value}>{children}</DoctorContext.Provider>
+    <DoctorContext.Provider value={value}>
+      {children}
+    </DoctorContext.Provider>
   );
 };
 
-export { DoctorContextProvider, DoctorContext };
+DoctorContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export { DoctorContext, DoctorContextProvider };
+
+

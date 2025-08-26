@@ -1,30 +1,16 @@
-import jwt from "jsonwebtoken";
+const authDoctor = (req, res, next) => {
+  console.log("=== Session Check ===");
+  console.log("Session:", req.session);
+  console.log("Doctor ID in session:", req.session?.doctorId);
 
-// Doctor authentication middleware
-const authDoctor = async (req, res, next) => {
-  try {
-    const { dtoken } = req.headers;
-    if (!dtoken) {
-      return res.json({
-        success: false,
-        message: "Not Authorized, Login Again",
-      });
-    }
-
-    const token_decoded = jwt.verify(dtoken, process.env.JWT_SECRET);
-
-    if (!token_decoded) {
-      return res.json({
-        success: false,
-        message: "Session Expired, Login Again",
-      });
-    }
-    //get id from token and pass to user controller
-    req.body.docId = token_decoded.id;
+  if (req.session && req.session.doctorId) {
     next();
-  } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+  } else {
+    res.status(401).json({
+      success: false,
+      message: "Unauthorized access. Session not found or missing user",
+      session: req.session, 
+    });
   }
 };
 

@@ -1,11 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react"; 
 import { assets } from "../../assets/assets";
-import { AdminContext, AppContext } from "../../context/";
 import { toast } from "react-toastify";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance"; 
 
 const AddDoctor = () => {
-  const [docImg, setDocImg] = useState(false);
+  const [docImg, setDocImg] = useState(null);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -17,14 +16,13 @@ const AddDoctor = () => {
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
 
-  const { aToken } = useContext(AdminContext);
-  const { backEndUrl } = useContext(AppContext);
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
     if (!docImg) {
       return toast.error("Please upload doctor image");
     }
+
     const formData = new FormData();
     formData.append("image", docImg);
     formData.append("email", email);
@@ -39,25 +37,18 @@ const AddDoctor = () => {
       "address",
       JSON.stringify({ line1: address1, line2: address2 })
     );
-    /* // console form data
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    } */
 
     try {
-      const { data } = await axios.post(
-        `${backEndUrl}/api/admin/add-doctor`,
+      const { data } = await axiosInstance.post(
+        "/api/admin/add-doctor",
         formData,
         {
-          // aToken will be converted to smaller case
-          // backend->middleware-> authAdmin will be called
-          headers: { aToken },
+          withCredentials: true,
         }
       );
 
       if (data.success) {
         toast.success(data.message);
-        // reset form
         setDocImg(null);
         setEmail("");
         setName("");
@@ -74,11 +65,8 @@ const AddDoctor = () => {
       }
     } catch (error) {
       console.log(error);
-
-      if (error.response) {
-        if (error.response.data) {
-          toast.error(error.response.data.message);
-        }
+      if (error.response?.data) {
+        toast.error(error.response.data.message);
       } else {
         toast.error(error.message);
       }
@@ -112,7 +100,6 @@ const AddDoctor = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row items-start gap-10 text-gray-600">
-          {/* left column */}
           <div className="w-full lg:flex-1 flex flex-col gap-4">
             <div className="flex flex-col flex-1 gap-1">
               <p>Doctor Name</p>
@@ -257,3 +244,4 @@ const AddDoctor = () => {
 };
 
 export default AddDoctor;
+

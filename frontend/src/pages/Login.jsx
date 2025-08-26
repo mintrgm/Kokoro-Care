@@ -1,65 +1,63 @@
-import React, { useState, useContext, useEffect } from "react";
-import { AppContext } from "../context/AppContext";
-import axios from "axios";
+import React, { useState, useContext } from "react";
+import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const Login = () => {
   const [state, setState] = useState("Sign Up");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const { token, setToken, backEndUrl } = useContext(AppContext);
+
   const navigate = useNavigate();
+  const { setToken, loadUserProfileData } = useContext(AppContext);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
     try {
       if (state === "Sign Up") {
-        // call the register API
-        const { data } = await axios.post(`${backEndUrl}/api/user/register`, {
-          email,
-          password,
-          name,
-        });
+        const { data } = await axiosInstance.post(
+          "/api/user/register",
+          { name, email, password },
+          { withCredentials: true } 
+        );
+
         if (data.success) {
-          localStorage.setItem("uToken", data.token);
-          setToken(data.token);
+          toast.success(data.message);
+          setState("Login");
         } else {
-          console.log(data.message);
           toast.error(data.message);
         }
       } else {
-        // call the login API
-        const { data } = await axios.post(`${backEndUrl}/api/user/login`, {
-          email,
-          password,
-        });
+        const { data } = await axiosInstance.post(
+          "/api/user/login",
+          { email, password },
+          { withCredentials: true } 
+        );
+
         if (data.success) {
           toast.success(data.message);
-          localStorage.setItem("uToken", data.token);
-          setToken(data.token);
+
+          if (data.user) {
+            localStorage.setItem("user", JSON.stringify(data.user));
+          }
+
+          setToken(true); 
+          await loadUserProfileData(); 
+          navigate("/");
         } else {
           toast.error(data.message);
         }
       }
     } catch (error) {
-      if (error.response) {
-        console.log(error.response.data.message);
-        toast.error(error.response.data.message);
-      } else {
-        console.log(error);
-        toast.error(error.message);
-      }
+      const errorMsg =
+        error.response?.data?.message || error.message || "Login failed";
+      console.log(errorMsg);
+      toast.error(errorMsg);
     }
   };
-
-  useEffect(() => {
-    if (token) {
-      navigate("/");
-    }
-  }, [token]);
 
   return (
     <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center">
@@ -70,6 +68,7 @@ const Login = () => {
         <p>
           Please {state === "Sign Up" ? "sign up" : "login"} to book appointment
         </p>
+
         {state === "Sign Up" && (
           <div className="w-full">
             <p>Full Name</p>
@@ -93,6 +92,7 @@ const Login = () => {
             required
           />
         </div>
+
         <div className="w-full">
           <p>Password</p>
           <input
@@ -103,12 +103,14 @@ const Login = () => {
             required
           />
         </div>
+
         <button
           type="submit"
           className="bg-primary text-white w-full py-2 rounded-md text-base"
         >
           {state === "Sign Up" ? "Create account" : "Login"}
         </button>
+
         {state === "Sign Up" ? (
           <p>
             Already have an account?{" "}
@@ -121,7 +123,7 @@ const Login = () => {
           </p>
         ) : (
           <p>
-            Create an new account?{" "}
+            Create a new account?{" "}
             <span
               onClick={() => setState("Sign Up")}
               className="text-primary underline cursor-pointer"

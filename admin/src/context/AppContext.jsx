@@ -1,8 +1,8 @@
 import { createContext } from "react";
+import PropTypes from "prop-types";
 
 const AppContext = createContext();
 
-// Context for App
 const AppContextProvider = (props) => {
   const calculateAge = (dob) => {
     const today = new Date();
@@ -47,6 +47,10 @@ const AppContextProvider = (props) => {
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
   );
+};
+
+AppContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export { AppContextProvider, AppContext };

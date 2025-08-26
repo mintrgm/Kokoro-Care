@@ -1,5 +1,6 @@
 import authAdmin from "./authAdmin.js";
-import upload from "./multer.js";
 import authUser from "./authUser.js";
+import authDoctor from "./authDoctor.js";
+import diskUpload from "./diskUpload.js";
 
-export { authAdmin, upload, authUser };
+export { authAdmin, authUser, authDoctor, diskUpload };

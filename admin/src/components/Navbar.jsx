@@ -1,16 +1,23 @@
-import { useContext } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { AdminContext } from "../context/";
+import axiosInstance from "../utils/axiosInstance";
 import { assets } from "../assets/assets";
 
-const Navbar = () => {
-  const { aToken, setAToken } = useContext(AdminContext);
+const Navbar = ({ userRole, setUserRole }) => {
   const navigate = useNavigate();
 
-  const logout = () => {
-    navigate("/");
-    aToken && setAToken("");
-    aToken && localStorage.removeItem("aToken");
+  const logout = async () => {
+    try {
+      const logoutUrl =
+        userRole === "admin" ? "/api/admin/logout" : "/api/doctor/logout";
+
+      await axiosInstance.post(logoutUrl, {}, { withCredentials: true });
+
+      setUserRole(null);
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -18,13 +25,18 @@ const Navbar = () => {
       <div className="flex items-center gap-2 text-xs ">
         <img
           src={assets.admin_logo}
-          alt=""
+          alt="Logo"
           className="w-36 s:w-40 cursor-pointer"
+          onClick={() =>
+            navigate(userRole === "admin" ? "/admin-dashboard" : "/doctor-dashboard")
+          }
+          style={{ userSelect: "none" }}
         />
         <p className="border px-2.5 py-0.5 rounded-full border-gray-500 text-gray-600">
-          {aToken ? "Admin" : "Doctor"}
+          {userRole === "admin" ? "Admin" : userRole === "doctor" ? "Doctor" : ""}
         </p>
       </div>
+
       <button
         onClick={logout}
         className="bg-primary text-white text-sm px-10 py-2 rounded-full"

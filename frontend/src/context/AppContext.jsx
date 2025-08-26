@@ -1,74 +1,102 @@
 import { createContext, useEffect, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
 
 export const AppContext = createContext();
 
-const AppContextProvider = (props) => {
-  const currencySymbol = "₹";
+export const AppContextProvider = ({ children }) => {
+  const currencySymbol = "Rs.";
   const backEndUrl = import.meta.env.VITE_BACKEND_URL;
-  const [doctors, setDoctors] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem("uToken") || "");
-  const [userData, setUserData] = useState(false);
 
-  const getDoctorsData = async () => {
+  const [doctors, setDoctors] = useState([]);
+  const [userData, setUserData] = useState(null);
+  const [token, setToken] = useState(false); 
+  const [loadingUser, setLoadingUser] = useState(true); 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const interceptor = axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const message = error?.response?.data?.message;
+
+        if (message && message.includes("Session Expired")) {
+          toast.error("Session expired. Please login again.");
+          setUserData(null);
+          setToken(false); 
+          navigate("/login");
+        }
+
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axiosInstance.interceptors.response.eject(interceptor);
+    };
+  }, [navigate]);
+
+  const loadUserProfileData = async () => {
+    setLoadingUser(true); 
+
     try {
-      const { data } = await axios.get(`${backEndUrl}/api/doctor/list`);
+      const { data } = await axiosInstance.get("/api/user/profile", {
+        withCredentials: true,
+      });
 
       if (data.success) {
-        setDoctors(data.doctors);
-        console.log(data.doctors);
+        setUserData(data.user);
+        setToken(true);
       } else {
-        toast.error(data.message);
+        setUserData(null);
+        setToken(false);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      setUserData(null);
+      setToken(false);
+    } finally {
+      setLoadingUser(false); 
     }
   };
 
-  const loadUserProfileData = async () => {
+  const getDoctorsData = async () => {
     try {
-      const { data } = await axios.get(`${backEndUrl}/api/user/profile`, {
-        headers: { uToken: token },
-      });
+      const { data } = await axiosInstance.get("/api/doctor/list");
       if (data.success) {
-        setUserData(data.userData);
+        setDoctors(data.doctors);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     }
   };
 
   useEffect(() => {
     getDoctorsData();
+    loadUserProfileData();
   }, []);
 
-  useEffect(() => {
-    if (token) {
-      loadUserProfileData();
-    } else {
-      setUserData(false);
-    }
-  }, [token]);
-
   const value = {
+    currencySymbol,
+    backEndUrl,
     doctors,
     getDoctorsData,
-    currencySymbol,
-    token,
-    setToken,
-    backEndUrl,
     userData,
     setUserData,
+    loadingUser,
     loadUserProfileData,
+    token, 
+    setToken, 
   };
+
   return (
-    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
+    <AppContext.Provider value={value}>{children}</AppContext.Provider>
   );
 };
 
-export default AppContextProvider;
+AppContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

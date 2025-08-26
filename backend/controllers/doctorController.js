@@ -1,23 +1,32 @@
 import doctorModel from "../models/doctorModel.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import appointmentModel from "../models/appointmentModel.js";
 
-// change availability of doctor for both admin panel and doctor panel
 const changeAvailability = async (req, res) => {
   try {
-    const { docId } = req.body;
+    const { docId } = req.body; 
 
-    const docData = await doctorModel.findById(docId);
+    if (!docId) {
+      return res.status(400).json({ success: false, message: "Doctor ID is required" });
+    }
 
-    await doctorModel.findByIdAndUpdate(docId, {
-      available: !docData.available,
+    const doctor = await doctorModel.findById(docId); 
+
+    if (!doctor) {
+      return res.status(404).json({ success: false, message: "Doctor not found" });
+    }
+
+    doctor.available = !doctor.available; 
+    await doctor.save(); 
+
+    return res.status(200).json({
+      success: true,
+      message: `Doctor is now ${doctor.available ? "available" : "unavailable"}`,
+      available: doctor.available
     });
-
-    res.json({ success: true, message: "Availability Changed" });
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    console.error("Error changing availability:", error);
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -36,36 +45,45 @@ const getDoctorsList = async (req, res) => {
   }
 };
 
-// API for doctor login
 const loginDoctor = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return res.json({ success: false, message: "All fields are required" });
     }
+
     const doctor = await doctorModel.findOne({ email });
     if (!doctor) {
       return res.json({ success: false, message: "Doctor not found" });
     }
+
     const isMatchPassword = await bcrypt.compare(password, doctor.password);
-    if (isMatchPassword) {
-      const token = jwt.sign({ id: doctor._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
-      res.json({ success: true, token });
-    } else {
-      res.json({ success: false, message: "Invalid credentials" });
+    if (!isMatchPassword) {
+      return res.json({ success: false, message: "Invalid credentials" });
     }
+
+    delete req.session.user;
+    delete req.session.adminId;
+
+    req.session.doctorId = doctor._id.toString();
+
+    return res.json({ success: true, message: "Logged in successfully" });
+
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: error.message });
+    return res.json({ success: false, message: error.message });
   }
 };
 
-// API to get doctor appointments for doctor panel
 const getDoctorAppointments = async (req, res) => {
   try {
-    const { docId } = req.body;
+    const docId = req.session.doctorId; 
+    console.log("Doctor ID in session (appointments):", docId);
+
+    if (!docId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
 
     const appointments = await appointmentModel.find({ docId }).sort({
       slotDate: "asc",
@@ -79,72 +97,79 @@ const getDoctorAppointments = async (req, res) => {
   }
 };
 
-// API to mark appointment as completed for doctor panel
 const appointmentCompleted = async (req, res) => {
   try {
-    const { appointmentId, docId } = req.body;
+    const { appointmentId } = req.body;
+    const docId = req.session.doctorId; 
+
     const appointmentData = await appointmentModel.findById(appointmentId);
-    if (appointmentData && appointmentData.docId === docId) {
-      await appointmentModel.findByIdAndUpdate(appointmentId, {
-        isCompleted: true,
-      });
-      res.json({ success: true, message: "Appointment completed" });
+
+    if (appointmentData && appointmentData.docId.toString() === docId) {
+      await appointmentModel.findByIdAndUpdate(appointmentId, { isCompleted: true });
+      return res.json({ success: true, message: "Appointment completed" });
     } else {
-      res.json({ success: false, message: "Invalid appointment" });
+      return res.json({ success: false, message: "Invalid appointment" });
     }
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: error.message });
+    return res.json({ success: false, message: error.message });
   }
 };
 
-// API to cancel appointment for doctor panel
 const cancelAppointment = async (req, res) => {
   try {
-    const { appointmentId, docId } = req.body;
+    const { appointmentId } = req.body;
+    const docId = req.session.doctorId; 
+
     const appointmentData = await appointmentModel.findById(appointmentId);
-    if (appointmentData && appointmentData.docId === docId) {
-      await appointmentModel.findByIdAndUpdate(appointmentId, {
-        isCancelled: true,
-      });
-      res.json({ success: true, message: "Appointment cancelled" });
+
+    if (appointmentData && appointmentData.docId.toString() === docId) {
+      await appointmentModel.findByIdAndUpdate(appointmentId, { isCancelled: true });
+      return res.json({ success: true, message: "Appointment cancelled" });
     } else {
-      res.json({ success: false, message: "Invalid appointment" });
+      return res.json({ success: false, message: "Invalid appointment" });
     }
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: error.message });
+    return res.json({ success: false, message: error.message });
   }
 };
 
-// API to get dashboard data for doctor panel
 const doctorDashboard = async (req, res) => {
   try {
-    const { docId } = req.body;
+    const docId = req.session.doctorId;
+    console.log("Doctor ID in session (dashboard):", docId);
+    
+    if (!docId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
     const appointments = await appointmentModel.find({ docId }).sort({
       slotDate: "asc",
       slotTime: "asc",
     });
 
     let earnings = 0;
-    appointments.map((appointment) => {
+    appointments.forEach(appointment => {
       if (appointment.isCompleted || appointment.isPaymentDone) {
         earnings += appointment.amount;
       }
     });
 
     let patients = [];
-    appointments.map((appointment) => {
+    appointments.forEach(appointment => {
       if (!patients.includes(appointment.userId)) {
         patients.push(appointment.userId);
       }
     });
+
     const dashData = {
       earnings,
       appointments: appointments.length,
       patients: patients.length,
       latestAppointments: appointments.reverse().slice(0, 5),
     };
+
     res.json({ success: true, dashData });
   } catch (error) {
     console.log(error);
@@ -152,11 +177,20 @@ const doctorDashboard = async (req, res) => {
   }
 };
 
-// API to get doctor profile data
 const getDoctorProfile = async (req, res) => {
   try {
-    const { docId } = req.body;
+    const docId = req.session.doctorId; 
+
+    if (!docId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
     const profileData = await doctorModel.findById(docId).select(["-password"]);
+
+    if (!profileData) {
+      return res.json({ success: true, profileData: null });
+    }
+
     return res.json({ success: true, profileData });
   } catch (error) {
     console.log(error);
@@ -164,7 +198,6 @@ const getDoctorProfile = async (req, res) => {
   }
 };
 
-// API to update doctor profile data
 const updateDoctorProfile = async (req, res) => {
   try {
     const { docId, fees, address, available, password } = req.body;
@@ -182,6 +215,47 @@ const updateDoctorProfile = async (req, res) => {
   }
 };
 
+const updateDoctorPassword = async (req, res) => {
+  try {
+    const docId = req.session.doctorId;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+
+    const doctor = await doctorModel.findById(docId);
+
+    if (!doctor) {
+      return res.status(404).json({ success: false, message: "Doctor not found" });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, doctor.password);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: "Current password is incorrect" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    doctor.password = hashedPassword;
+    await doctor.save();
+
+    return res.json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Update password error:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const logoutDoctor = (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ success: false, message: "Logout failed" });
+    }
+    res.clearCookie("connect.sid");
+    res.json({ success: true, message: "Logged out successfully" });
+  });
+};
+
 export {
   changeAvailability,
   getDoctorsList,
@@ -192,4 +266,7 @@ export {
   doctorDashboard,
   getDoctorProfile,
   updateDoctorProfile,
+  updateDoctorPassword,
+  logoutDoctor
 };
+

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const appoitmentSchema = new mongoose.Schema({
+const appointmentSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   docId: { type: String, required: true },
   slotDate: { type: String, required: true },
@@ -12,10 +12,12 @@ const appoitmentSchema = new mongoose.Schema({
   isCancelled: { type: Boolean, default: false },
   isPaymentDone: { type: Boolean, default: false },
   isCompleted: { type: Boolean, default: false },
+  type: { type: String, enum: ["online", "visit"], required: true }, 
+  videoCallLink: { type: String, default: "" }, 
 });
 
 const appointmentModel =
   mongoose.models.appointment ||
-  mongoose.model("appointment", appoitmentSchema);
+  mongoose.model("appointment", appointmentSchema);
 
 export default appointmentModel;

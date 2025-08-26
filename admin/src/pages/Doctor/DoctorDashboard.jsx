@@ -4,110 +4,104 @@ import { assets } from "../../assets/assets";
 
 const DoctorDashboard = () => {
   const {
-    dToken,
-    getDashboardData,
-    dashData,
+    getDashboard,  
+    dashboard,   
     completeAppointment,
     cancelAppointment,
   } = useContext(DoctorContext);
+
   const { slotDateFormat, currency } = useContext(AppContext);
 
   useEffect(() => {
-    if (dToken) {
-      getDashboardData();
-    }
-  }, [dToken]);
+    getDashboard();
+  }, []);
+
+  if (!dashboard) return null;
+
   return (
-    dashData && (
-      <div className="m-5">
-        <div className="flex flex-wrap gap-3">
-          <div className="flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all">
-            <img className="w-14" src={assets.earning_icon} alt="" />
+    <div className="m-5">
+      <div className="flex flex-wrap gap-3">
+        {[
+          {
+            icon: assets.earning_icon,
+            label: "Earnings",
+            value: `${currency} ${dashboard.earnings}`,
+          },
+          {
+            icon: assets.appointment_icon,
+            label: "Appointments",
+            value: dashboard.appointments,
+          },
+          {
+            icon: assets.patients_icon,
+            label: "Patients",
+            value: dashboard.patients,
+          },
+        ].map(({ icon, label, value }) => (
+          <div
+            key={label}
+            className="flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all"
+          >
+            <img className="w-14" src={icon} alt={label} />
             <div>
-              <p className="text-xl font-semibold text-gray-600">
-                {currency} {dashData.earnings}
-              </p>
-              <p className="text-gray-400">Earnings</p>
+              <p className="text-xl font-semibold text-gray-600">{value}</p>
+              <p className="text-gray-400">{label}</p>
             </div>
           </div>
+        ))}
+      </div>
 
-          <div className="flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all">
-            <img className="w-14" src={assets.appointment_icon} alt="" />
-            <div>
-              <p className="text-xl font-semibold text-gray-600">
-                {dashData.appointments}
-              </p>
-              <p className="text-gray-400">Appointments</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all">
-            <img className="w-14" src={assets.patients_icon} alt="" />
-            <div>
-              <p className="text-xl font-semibold text-gray-600">
-                {dashData.patients}
-              </p>
-              <p className="text-gray-400">Patients</p>
-            </div>
-          </div>
+      <div className="bg-white mt-10 rounded border">
+        <div className="flex items-center gap-2.5 p-4 rounded-t border-b">
+          <img src={assets.list_icon} alt="Latest Bookings" />
+          <p className="font-semibold">Latest Bookings</p>
         </div>
 
-        <div className="bg-white ">
-          <div className="flex items-center gap-2.5  p-4 mt-10 rounded-t border">
-            <img src={assets.list_icon} alt="Latest Bookings" />
-            <p className="font-semibold">Latest Bookings</p>
-          </div>
-          <div className="pt-4 border border-t-0">
-            {dashData.latestAppointments.map((appointment) => (
-              <div
-                className="flex items-center px-6 py-3 gap-3 hover:bg-gray-100"
-                key={appointment._id}
-              >
-                <img
-                  className="rounded-full w-10"
-                  src={appointment.userData.image}
-                  alt={appointment.userData.name}
-                />
-                <div className="flex-1 text-sm">
-                  <p className="text-gray-800 font-medium">
-                    {appointment.userData.name}
-                  </p>
-                  <p className="text-gray-600">
-                    {slotDateFormat(appointment.slotDate)}
-                  </p>
-                </div>
-                <>
-                  {appointment.isCancelled ? (
-                    <p className="text-red-400 text-xs font-medium">
-                      Cancelled
-                    </p>
-                  ) : appointment.isCompleted ? (
-                    <p className="text-green-400 text-xs font-medium">
-                      Completed
-                    </p>
-                  ) : (
-                    <div className="flex">
-                      <img
-                        className="w-10 cursor-pointer"
-                        src={assets.cancel_icon}
-                        alt="Cancel"
-                        onClick={() => cancelAppointment(appointment._id)}
-                      />
-                      <img
-                        className="w-10 cursor-pointer"
-                        src={assets.tick_icon}
-                        alt="Accept"
-                        onClick={() => completeAppointment(appointment._id)}
-                      />
-                    </div>
-                  )}
-                </>
+        <div className="pt-4 overflow-auto max-h-[50vh]">
+          {dashboard.latestAppointments.map((appointment) => (
+            <div
+              key={appointment._id}
+              className="flex items-center px-6 py-3 gap-3 hover:bg-gray-100"
+            >
+              <img
+                className="rounded-full w-10"
+                src={appointment.userData.image}
+                alt={appointment.userData.name}
+              />
+              <div className="flex-1 text-sm">
+                <p className="text-gray-800 font-medium">
+                  {appointment.userData.name}
+                </p>
+                <p className="text-gray-600">
+                  {slotDateFormat(appointment.slotDate)}
+                </p>
               </div>
-            ))}
-          </div>
+
+              {appointment.isCancelled ? (
+                <p className="text-red-400 text-xs font-medium">Cancelled</p>
+              ) : appointment.isCompleted ? (
+                <p className="text-green-400 text-xs font-medium">Completed</p>
+              ) : (
+                <div className="flex gap-2">
+                  <img
+                    className="w-10 cursor-pointer"
+                    src={assets.cancel_icon}
+                    alt="Cancel"
+                    onClick={() => cancelAppointment(appointment._id)}
+                  />
+                  <img
+                    className="w-10 cursor-pointer"
+                    src={assets.tick_icon}
+                    alt="Accept"
+                    onClick={() => completeAppointment(appointment._id)}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
-    )
+    </div>
   );
 };
 
