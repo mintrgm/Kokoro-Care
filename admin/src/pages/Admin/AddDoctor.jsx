@@ -75,110 +75,94 @@ const AddDoctor = () => {
 
   return (
     <form className="m-5 w-full" onSubmit={onSubmitHandler}>
-      <p className="mb-3 text-lg font-medium">Add Doctor</p>
+      <p className="mb-3 text-lg font-audiowide text-[#F8FBFF] font-bold">Add Doctor</p>
 
-      <div className="bg-white p-8 border rounded w-full max-w-4xl max-h-[80vh] overflow-y-scroll">
-        <div className="flex items-center gap-4 mb-8 text-gray-500">
+      <div className="bg-[#090A0A] p-8 border border-white rounded w-full max-w-4xl max-h-[80vh] overflow-y-scroll">
+        <div className="flex items-center gap-4 mb-8">
           <label htmlFor="doc_img">
             <img
-              className="w-16 bg-gray-100 border-r cursor-pointer rounded-full"
+              className="w-14 h-14 bg-gray-900 border border-white cursor-pointer rounded-full object-cover transition-transform hover:scale-105"
               src={docImg ? URL.createObjectURL(docImg) : assets.upload_area}
               alt="uploaded image"
             />
           </label>
-          <input
-            type="file"
-            id="doc_img"
-            hidden
-            onChange={(e) => setDocImg(e.target.files[0])}
-          />
-          <p>
-            Upload doctor
-            <br />
-            picture
-          </p>
+          <input type="file" id="doc_img" hidden onChange={(e) => setDocImg(e.target.files[0])} />
+          <p className="text-white">Upload doctor<br />picture</p>
         </div>
 
-        <div className="flex flex-col lg:flex-row items-start gap-10 text-gray-600">
+        <div className="flex flex-col lg:flex-row items-start gap-10">
           <div className="w-full lg:flex-1 flex flex-col gap-4">
-            <div className="flex flex-col flex-1 gap-1">
-              <p>Doctor Name</p>
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-semibold">Doctor Name</p>
               <input
-                className="border rounded  px-3 py-2"
+                className="border border-white rounded px-3 py-2 bg-[#090A0A] text-white font-electrolize"
                 type="text"
                 placeholder="Name"
-                onChange={(e) => setName(e.target.value)}
                 value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
-            <div className="flex flex-col flex-1 gap-1">
-              <p>Doctor Email</p>
+
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-semibold">Doctor Email</p>
               <input
-                className="border rounded  px-3 py-2"
+                className="border border-white rounded px-3 py-2 bg-[#090A0A] text-white font-electrolize"
                 type="email"
                 placeholder="Email"
-                onChange={(e) => setEmail(e.target.value)}
                 value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
-            <div className="flex flex-col flex-1 gap-1">
-              <p>Doctor Password</p>
+
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-semibold">Doctor Password</p>
               <input
-                className="border rounded  px-3 py-2"
+                className="border border-white rounded px-3 py-2 bg-[#090A0A] text-white font-electrolize"
                 type="password"
                 placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
                 value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
-            <div className="flex flex-col flex-1 gap-1">
-              <p>Doctor Experience</p>
+
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-semibold">Doctor Experience</p>
               <select
-                className="border rounded  px-3 py-2"
-                name="experience"
-                id="experience"
-                onChange={(e) => setExperience(e.target.value)}
+                className="border border-white rounded px-3 py-2 bg-[#090A0A] text-white font-electrolize"
                 value={experience}
+                onChange={(e) => setExperience(e.target.value)}
                 required
               >
-                <option value="1">1 Year</option>
-                <option value="2">2 Years</option>
-                <option value="3">3 Years</option>
-                <option value="4">4 Years</option>
-                <option value="5">5 Years</option>
-                <option value="6">6 Years</option>
-                <option value="7">7 Years</option>
-                <option value="8">8 Years</option>
-                <option value="9">9 Years</option>
-                <option value="10">10 Years</option>
+                {[...Array(10).keys()].map(i => (
+                  <option key={i+1} value={i+1}>{i+1} Year{i>0?'s':''}</option>
+                ))}
               </select>
             </div>
-            <div className="flex flex-col flex-1 gap-1">
-              <p>Fees</p>
+
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-semibold">Fees</p>
               <input
-                className="border rounded  px-3 py-2"
+                className="border border-white rounded px-3 py-2 bg-[#090A0A] text-white font-electrolize"
                 type="number"
                 placeholder="Doctor fees"
-                onChange={(e) => setFees(e.target.value)}
                 value={fees}
+                onChange={(e) => setFees(e.target.value)}
                 required
               />
             </div>
           </div>
 
-          {/* Right column */}
+          {/* Right Column */}
           <div className="w-full lg:flex-1 flex flex-col gap-4">
-            <div className="flex flex-col flex-1 gap-1">
-              <p>Speciality</p>
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-semibold">Speciality</p>
               <select
-                className="border rounded  px-3 py-2"
-                name="speciality"
-                id="speciality"
-                onChange={(e) => setSpeciality(e.target.value)}
+                className="border border-white rounded px-3 py-2 bg-[#090A0A] text-white font-electrolize"
                 value={speciality}
+                onChange={(e) => setSpeciality(e.target.value)}
               >
                 <option value="General physician">General physician</option>
                 <option value="Gynecologist">Gynecologist</option>
@@ -188,55 +172,57 @@ const AddDoctor = () => {
                 <option value="Gastroenterologist">Gastroenterologist</option>
               </select>
             </div>
-            <div className="flex flex-col flex-1 gap-1">
-              <p>Education</p>
+
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-semibold">Education</p>
               <input
-                className="border rounded  px-3 py-2"
+                className="border border-white rounded px-3 py-2 bg-[#090A0A] text-white font-electrolize"
                 type="text"
                 placeholder="Education"
-                onChange={(e) => setDegree(e.target.value)}
                 value={degree}
+                onChange={(e) => setDegree(e.target.value)}
                 required
               />
             </div>
-            <div className="flex flex-col flex-1 gap-1">
-              <p>Address</p>
+
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-semibold">Address</p>
               <input
-                className="border rounded  px-3 py-2"
+                className="border border-white rounded px-3 py-2 bg-[#090A0A] text-white font-electrolize"
                 type="text"
                 placeholder="Address 1"
-                onChange={(e) => setAddress1(e.target.value)}
                 value={address1}
+                onChange={(e) => setAddress1(e.target.value)}
                 required
               />
               <input
-                className="border rounded  px-3 py-2"
+                className="border border-white rounded px-3 py-2 bg-[#090A0A] text-white font-electrolize"
                 type="text"
                 placeholder="Address 2"
-                onChange={(e) => setAddress2(e.target.value)}
                 value={address2}
+                onChange={(e) => setAddress2(e.target.value)}
                 required
               />
             </div>
           </div>
         </div>
 
-        <div>
-          <p className="mt-4 mb-2">About Doctor</p>
+        <div className="mt-4">
+          <p className="text-white font-semibold mb-2">About Doctor</p>
           <textarea
-            className="w-full px-4 pt-2 border rounded"
+            className="w-full px-4 pt-2 border border-white rounded bg-[#090A0A] text-white font-electrolize"
             rows={5}
             placeholder="write about doctor"
-            onChange={(e) => setAbout(e.target.value)}
             value={about}
+            onChange={(e) => setAbout(e.target.value)}
           />
         </div>
 
         <button
           type="submit"
-          className="bg-primary text-white text-sm px-10 py-3 rounded-full"
+          className="mt-4 bg-[#052F5F] hover:bg-[#031f3b] text-white text-sm px-10 py-3 rounded-full font-semibold transition-all"
         >
-          Add doctor
+          Add Doctor
         </button>
       </div>
     </form>

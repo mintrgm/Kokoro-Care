@@ -18,7 +18,7 @@ load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI(title="Medical Chatbot API")
-app.include_router(routes.router)
+app.include_router(routes.router, prefix="/api/baymax")
 
 # Configure CORS
 app.add_middleware(

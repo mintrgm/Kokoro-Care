@@ -4,11 +4,13 @@ import { assets } from "../assets/assets";
 
 const Sidebar = ({ userRole }) => {
   const linkStyle = ({ isActive }) =>
-    `flex items-center gap-3 py-3.5 px-6 cursor-pointer transition-all duration-200 ${
-      isActive ? "bg-[#F2F3FF] border-r-4 border-primary" : ""
+    `flex items-center gap-3 py-3.5 px-6 cursor-pointer transition-all duration-200 font-electrolize ${
+      isActive
+        ? "bg-[#1A1C1C] border-r-4 border-[#BAE7FF] text-[#F8FBFF] font-audiowide"
+        : "text-[#F8FBFF] opacity-80 hover:opacity-100"
     }`;
 
-  const wrapperStyle = "h-screen bg-white border-r w-64 flex-shrink-0";
+  const wrapperStyle = "h-screen bg-[#090A0A] border-r border-gray-700 w-64 flex-shrink-0";
 
   const navLinks = {
     admin: [
@@ -17,7 +19,7 @@ const Sidebar = ({ userRole }) => {
       { to: "/add-doctor", icon: assets.add_icon, label: "Add Doctor" },
       { to: "/doctors-list", icon: assets.people_icon, label: "Doctors List" },
       { to: "/patients-list", icon: assets.patient_icon, label: "Patients List" },
-      { to: "/video-call", icon: assets.add_icon, label: "Video Call" }, 
+      { to: "/video-call", icon: assets.VideoCall, label: "Video Call" },
     ],
     doctor: [
       { to: "/doctor-dashboard", icon: assets.home_icon, label: "Dashboard" },
@@ -32,10 +34,10 @@ const Sidebar = ({ userRole }) => {
 
   return (
     <div className={wrapperStyle}>
-      <ul className="text-[#515151] mt-5">
+      <ul className="mt-5">
         {links.map(({ to, icon, label }) => (
           <NavLink to={to} key={to} className={linkStyle}>
-            <img src={icon} alt={label} />
+            <img src={icon} alt={label} className="w-5 h-5" />
             <p className="hidden md:block">{label}</p>
           </NavLink>
         ))}

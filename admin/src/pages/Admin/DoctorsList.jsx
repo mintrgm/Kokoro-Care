@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 const DoctorsList = () => {
   const { doctors, getAllDoctors, changeAvailability, deleteDoctor } = useContext(AdminContext);
   const [editingDoctor, setEditingDoctor] = useState(null);
+
   const fetchDoctorById = async (id) => {
     try {
       const { data } = await axios.get(`/api/admin/doctor/${id}`, { withCredentials: true });
@@ -27,7 +28,7 @@ const DoctorsList = () => {
 
   return (
     <div className="m-5 max-h-[90vh] overflow-y-scroll">
-      <h1 className="text-lg font-medium">All Doctors</h1>
+      <h1 className="text-lg font-electrolize text-white">All Doctors</h1>
 
       <div className="flex flex-wrap w-full gap-4 pt-5 gap-y-6">
         {doctors.map((doctor) => (
@@ -42,8 +43,8 @@ const DoctorsList = () => {
             />
 
             <div className="p-4">
-              <p className="text-neutral-800 text-lg font-medium">{doctor.name}</p>
-              <p className="text-zinc-600 text-sm">{doctor.speciality}</p>
+              <p className="text-white text-lg font-electrolize">{doctor.name}</p>
+              <p className="text-white text-sm font-electrolize">{doctor.speciality}</p>
 
               <div className="mt-2 flex items-center gap-2 text-sm">
                 <input
@@ -52,7 +53,7 @@ const DoctorsList = () => {
                   checked={doctor.available}
                   onChange={() => changeAvailability(doctor._id)}
                 />
-                <label htmlFor={doctor._id}>
+                <label htmlFor={doctor._id} className="text-white font-electrolize">
                   <p>available</p>
                 </label>
 
@@ -71,7 +72,11 @@ const DoctorsList = () => {
                 </button>
 
                 <button onClick={() => fetchDoctorById(doctor._id)}>
-                  <img src={assets.Edit} alt="Edit Doctor" className="w-6 h-6 hover:opacity-70 cursor-pointer" />
+                  <img
+                    src={assets.Edit}
+                    alt="Edit Doctor"
+                    className="w-6 h-6 hover:opacity-70 cursor-pointer"
+                  />
                 </button>
               </div>
             </div>
@@ -80,14 +85,11 @@ const DoctorsList = () => {
       </div>
 
       {editingDoctor && (
-        <>
-          {console.log("Editing doctor object:", editingDoctor)}
-          <EditDoctor
-            doctor={editingDoctor}
-            onClose={() => setEditingDoctor(null)}
-            onUpdate={getAllDoctors}
-          />
-        </>
+        <EditDoctor
+          doctor={editingDoctor}
+          onClose={() => setEditingDoctor(null)}
+          onUpdate={getAllDoctors}
+        />
       )}
     </div>
   );

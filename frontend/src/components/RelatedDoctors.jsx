@@ -3,50 +3,64 @@ import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 
 const RelatedDoctors = ({ docId, speciality }) => {
-  const {doctors} = useContext(AppContext);
+  const { doctors } = useContext(AppContext);
   const [relDocs, setRelDocs] = useState([]);
-
   const navigate = useNavigate();
+
   useEffect(() => {
     if (doctors && speciality) {
-      const doctorsData = doctors.filter((doctor) => doctor.speciality === speciality && doctor._id !== docId);
+      const doctorsData = doctors.filter(
+        (doctor) => doctor.speciality === speciality && doctor._id !== docId
+      );
       setRelDocs(doctorsData);
     }
   }, [docId, speciality, doctors]);
+
   return (
-    <div className="flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10">
-      <h1 className="text-3xl font-medium">Top Doctors to Book</h1>
-      <p className="sm:w-1/3 text-center text-sm">
+    <div className="my-16 flex flex-col items-center">
+      <h1 className="text-3xl font-medium text-white text-center">Top Doctors to Book</h1>
+      <p className="text-white text-center text-sm mt-2 max-w-md">
         Simply browse through our extensive list of trusted doctors.
       </p>
-      <div className="w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0">
-        {relDocs.slice(0, 5).map((doctor, index) => (
+
+      <div className="flex gap-6 overflow-x-auto mt-6 px-2 py-4 justify-center">
+        {relDocs.slice(0, 10).map((doctor, index) => (
           <div
             key={index}
-            onClick={() => {navigate(`/appointment/${doctor._id}`); scrollTo(0, 0)}}
-            className="border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
+            onClick={() => {
+              navigate(`/appointment/${doctor._id}`);
+              scrollTo(0, 0);
+            }}
+            className="flex-none w-60 border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-5px] transition-all duration-300 bg-[#0c1010]"
           >
-            <img src={doctor.image} alt={doctor.name} className="bg-blue-50" />
-            <div className="p-4">
-              <div className="flex items-center gap-2 text-sm text-center text-green-500">
-                <p className="bg-green-500 rounded-full w-2 h-2"></p>
-                <p>Available</p>
+            <img
+              src={doctor.image}
+              alt={doctor.name}
+              className="w-full h-80 object-cover bg-gray-800"
+            />
+            <div className="p-4 flex flex-col items-center">
+              <div className="flex items-center gap-2 text-sm text-green-400 mb-1">
+                <span className="bg-green-400 rounded-full w-2 h-2"></span>
+                <span>Available</span>
               </div>
-              <p className="text-gray-900 text-lg font-medium">{doctor.name}</p>
-              <p className="text-gray-600 text-sm">{doctor.speciality}</p>
+              <p className="text-white text-lg font-medium text-center">{doctor.name}</p>
+              <p className="text-gray-300 text-sm text-center">{doctor.speciality}</p>
             </div>
           </div>
         ))}
       </div>
-      <button
-        onClick={() => {
-          navigate("/doctors");
-          scrollTo(0, 0);
-        }}
-        className="bg-blue-50 text-gray-600 px-12 py-3 rounded-full mt-10"
-      >
-        more...
-      </button>
+
+      <div className="text-center mt-6">
+        <button
+          onClick={() => {
+            navigate("/doctors");
+            scrollTo(0, 0);
+          }}
+          className="bg-[#021F40] text-white px-12 py-3 rounded-full hover:bg-[#01152a] transition"
+        >
+          more...
+        </button>
+      </div>
     </div>
   );
 };

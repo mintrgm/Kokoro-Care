@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { assets } from "../assets/assets"; 
+import PropTypes from "prop-types";
 
 const HistoryPopup = ({ userId, onClose, onSelectChat }) => {
   const [history, setHistory] = useState([]);
@@ -10,7 +11,7 @@ const HistoryPopup = ({ userId, onClose, onSelectChat }) => {
 
     const fetchHistory = async () => {
       try {
-        const res = await axios.get(`/api/baymax/chat-history/${userId}`);
+        const res = await axios.get(`http://localhost:8000/api/baymax/chat-history/${userId}`);
         setHistory(res.data);
       } catch (err) {
         console.error("Error fetching history", err);
@@ -22,7 +23,7 @@ const HistoryPopup = ({ userId, onClose, onSelectChat }) => {
 
   const handleDelete = async (chatId) => {
     try {
-      await axios.delete(`/api/baymax/chat/${chatId}`);
+      await axios.delete(`http://localhost:8000/api/baymax/chat/${chatId}`);
       setHistory((prev) => prev.filter((chat) => chat._id !== chatId));
     } catch (err) {
       console.error("Failed to delete chat", err);
@@ -31,7 +32,7 @@ const HistoryPopup = ({ userId, onClose, onSelectChat }) => {
 
   const handleSelect = async (chatId) => {
     try {
-      const res = await axios.get(`/api/baymax/chat/${chatId}`);
+      const res = await axios.get(`http://localhost:8000/api/baymax/chat/${chatId}`);
       onSelectChat(res.data.chat);
       onClose();
     } catch (err) {
@@ -78,6 +79,12 @@ const HistoryPopup = ({ userId, onClose, onSelectChat }) => {
       </div>
     </div>
   );
+};
+
+HistoryPopup.propTypes = {
+  userId: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSelectChat: PropTypes.func.isRequired,
 };
 
 export default HistoryPopup;

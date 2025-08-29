@@ -3,10 +3,15 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        audiowide: ["'Audiowide'", "cursive"],
+        electrolize: ["'Electrolize'", "sans-serif"],
+      },
       colors: {
-        primary: "#5F6FFF",
+        primary: "#344d6e",
       },
     },
   },
   plugins: [],
 };
+

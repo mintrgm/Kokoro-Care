@@ -1,25 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-*{
-    font-family: 'outfit', sans-serif;
+body {
+  font-family: 'Electrolize', sans-serif;
 }
 
-.active hr {
-    @apply block;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Audiowide', cursive;
 }
 
-/* hide the scrollbar used in speciality menu */
-::-webkit-scrollbar {
-    @apply hidden
-}
+.active hr { @apply block; }
 
-/* mobile menu */
+::-webkit-scrollbar { @apply hidden; }
+
 @media (max-width: 740px) {
-    .active p{
-        @apply text-white bg-primary
-    }
+  .active p { @apply text-white bg-primary; }
 }

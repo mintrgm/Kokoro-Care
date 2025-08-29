@@ -98,14 +98,14 @@ const EditDoctor = ({ doctor, onClose, onUpdate }) => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-xl w-full max-w-lg shadow-lg">
-        <h2 className="text-xl font-bold mb-4">Edit Doctor</h2>
+      <div className="bg-gray-900 p-6 rounded-xl w-full max-w-lg shadow-lg">
+        <h2 className="text-xl font-electrolize text-white mb-4">Edit Doctor</h2>
         <form
           onSubmit={handleSubmit}
-          className="space-y-3 overflow-y-auto max-h-[80vh] pr-2"
+          className="space-y-3 overflow-y-auto max-h-[80vh] pr-2 font-electrolize text-white"
         >
           <div>
-            <label className="text-sm font-medium">Upload Doctor Picture</label>
+            <label className="text-sm font-medium text-white">Upload Doctor Picture</label>
             <input
               type="file"
               accept="image/*"
@@ -115,35 +115,35 @@ const EditDoctor = ({ doctor, onClose, onUpdate }) => {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Doctor Name</label>
+            <label className="text-sm font-medium text-white">Doctor Name</label>
             <input
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full border p-2 rounded mt-1"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
               required
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium">Doctor Email</label>
+            <label className="text-sm font-medium text-white">Doctor Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border p-2 rounded mt-1"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
               required
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium">Experience</label>
+            <label className="text-sm font-medium text-white">Experience</label>
             <select
               name="experience"
               value={formData.experience}
               onChange={handleChange}
-              className="w-full border p-2 rounded mt-1"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
             >
               <option value="">Select experience</option>
               {[...Array(11)].map((_, i) => (
@@ -155,23 +155,23 @@ const EditDoctor = ({ doctor, onClose, onUpdate }) => {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Fees</label>
+            <label className="text-sm font-medium text-white">Fees</label>
             <input
               type="number"
               name="fees"
               value={formData.fees}
               onChange={handleChange}
-              className="w-full border p-2 rounded mt-1"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium">Speciality</label>
+            <label className="text-sm font-medium text-white">Speciality</label>
             <select
               name="speciality"
               value={formData.speciality}
               onChange={handleChange}
-              className="w-full border p-2 rounded mt-1"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
               required
             >
               <option value="">Select Speciality</option>
@@ -185,42 +185,42 @@ const EditDoctor = ({ doctor, onClose, onUpdate }) => {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Education</label>
+            <label className="text-sm font-medium text-white">Education</label>
             <input
               name="degree"
               value={formData.degree}
               onChange={handleChange}
-              className="w-full border p-2 rounded mt-1"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium">Address Line 1</label>
+            <label className="text-sm font-medium text-white">Address Line 1</label>
             <input
               name="line1"
               value={formData.address.line1}
               onChange={handleChange}
-              className="w-full border p-2 rounded mt-1"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium">Address Line 2</label>
+            <label className="text-sm font-medium text-white">Address Line 2</label>
             <input
               name="line2"
               value={formData.address.line2}
               onChange={handleChange}
-              className="w-full border p-2 rounded mt-1"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium">About Doctor</label>
+            <label className="text-sm font-medium text-white">About Doctor</label>
             <textarea
               name="about"
               value={formData.about}
               onChange={handleChange}
-              className="w-full border p-2 rounded mt-1"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
               rows={3}
             />
           </div>
@@ -229,13 +229,13 @@ const EditDoctor = ({ doctor, onClose, onUpdate }) => {
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+              className="bg-[#84074B] px-4 py-2 rounded hover:bg-gray-400"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+              className="bg-[#052F5F] text-white px-4 py-2 rounded hover:bg-indigo-700"
             >
               Save Changes
             </button>

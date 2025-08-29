@@ -30,8 +30,8 @@ const EditPatient = ({ patient, onClose, onUpdate }) => {
         address: addressStr,
         gender: patient.gender || "",
         dob: patient.dob
-        ? new Date(patient.dob).toISOString().split("T")[0]
-        : ""
+          ? new Date(patient.dob).toISOString().split("T")[0]
+          : "",
       });
       setImage(null);
     }
@@ -72,16 +72,14 @@ const EditPatient = ({ patient, onClose, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative">
-        <h2 className="text-xl font-semibold mb-4">Edit Patient</h2>
+      <div className="bg-gray-900 rounded-xl shadow-lg w-full max-w-lg p-6 relative">
+        <h2 className="text-xl font-electrolize text-white mb-4">Edit Patient</h2>
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 max-h-[80vh] overflow-y-auto pr-2"
+          className="space-y-3 max-h-[80vh] overflow-y-auto pr-2 font-electrolize text-white"
         >
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Upload Patient Picture
-            </label>
+            <label className="text-sm font-medium text-white">Upload Patient Picture</label>
             <input
               type="file"
               accept="image/*"
@@ -91,74 +89,74 @@ const EditPatient = ({ patient, onClose, onUpdate }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Name</label>
+            <label className="text-sm font-medium text-white">Name</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
+            <label className="text-sm font-medium text-white">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Phone</label>
+            <label className="text-sm font-medium text-white">Phone</label>
             <input
               type="text"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Address</label>
+            <label className="text-sm font-medium text-white">Address</label>
             <input
               type="text"
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Gender</label>
+            <label className="text-sm font-medium text-white">Gender</label>
             <select
               name="gender"
               value={formData.gender}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
             >
               <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
+              <option value="Male" className="text-black">Male</option>
+              <option value="Female" className="text-black">Female</option>
+              <option value="Other" className="text-black">Other</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Birthday</label>
+            <label className="text-sm font-medium text-white">Birthday</label>
             <input
               type="date"
               name="dob"
               value={formData.dob}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border p-2 rounded mt-1 text-white bg-gray-800"
             />
           </div>
 
@@ -166,13 +164,13 @@ const EditPatient = ({ patient, onClose, onUpdate }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+              className="bg-[#84074B] px-4 py-2 rounded hover:bg-gray-400"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="bg-[#052F5F] text-white px-4 py-2 rounded hover:bg-indigo-700"
             >
               Save
             </button>

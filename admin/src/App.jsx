@@ -64,7 +64,7 @@ const App = () => {
   }
 
   return (
-    <div className="bg-[#F8F9FD]">
+    <div className="bg-[#090A0A]">
       <Navbar userRole={userRole} setUserRole={setUserRole} />
       <ToastContainer />
       <div className="flex items-start">

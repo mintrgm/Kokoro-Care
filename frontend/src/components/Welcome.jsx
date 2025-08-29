@@ -15,14 +15,12 @@ const sampleQuestions = [
 const Welcome = ({ onSelectQuestion }) => {
   const [loaded, setLoaded] = useState(false);
 
-  // Use useEffect to set loaded state after component mounts
   useEffect(() => {
     setLoaded(true);
   }, []);
 
   return (
     <div className="flex flex-col items-center justify-start w-full text-center px-4 py-6 overflow-y-auto">
-      {/* Decorative Elements positioned with fixed values rather than negative values */}
       <div
         className="blob-decoration opacity-10"
         style={{ top: "50px", right: "50px" }}
@@ -94,7 +92,6 @@ const Welcome = ({ onSelectQuestion }) => {
   );
 };
 
-// Helper components
 const Feature = ({ icon, title, description }) => (
   <div className="bg-white p-4 rounded-lg border border-light-border text-center shadow-sm">
     <div className="flex justify-center mb-2">
@@ -105,7 +102,6 @@ const Feature = ({ icon, title, description }) => (
   </div>
 );
 
-// Helper function to generate different icons for sample questions
 const getIcon = (index) => {
   const iconClasses =
     "flex-shrink-0 p-2 rounded-full bg-primary-50 text-primary-600";

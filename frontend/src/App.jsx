@@ -17,14 +17,11 @@ import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   const location = useLocation();
 
-  const hideHelpBot = ["/login"].includes(location.pathname);
+  const hideHelpBot = location.pathname === "/login";
   const hideFooter = location.pathname === "/baymax";
 
-  const containerClasses =
-    location.pathname === "/baymax" ? "mx-0" : "mx-5 sm:mx-[10%]";
-
   return (
-    <div className={`${containerClasses}`}>
+    <div className="w-full">
       <ToastContainer />
       <Navbar />
       <Routes>

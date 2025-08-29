@@ -77,12 +77,12 @@ const VideoCall = () => {
   return (
     <div className="w-full max-w-6xl m-5">
       <div className="flex items-center gap-2 mb-3">
-        <img src={assets.add_icon} alt="Video" className="w-6 h-6" />
-        <p className="text-lg font-medium">Video Call Links</p>
+        <img src={assets.VideoCall} alt="Video" className="w-6 h-6" />
+        <p className="text-lg font-medium text-white">Video Call Links</p>
       </div>
 
-      <div className="bg-white rounded border text-sm min-h-[60vh] max-h-[80vh] overflow-y-auto">
-        <div className="hidden sm:grid grid-cols-[0.5fr_3fr_3fr_3fr_2fr_3fr] py-3 px-6 border-b font-medium text-gray-700">
+      <div className="bg-[#1E1E1E] rounded border border-white text-sm min-h-[60vh] max-h-[80vh] overflow-y-auto">
+        <div className="hidden sm:grid grid-cols-[0.5fr_3fr_3fr_3fr_2fr_3fr] py-3 px-6 border-b border-white font-audiowide text-lg text-white">
           <p>#</p>
           <p>Patient</p>
           <p>Date & Time</p>
@@ -92,22 +92,22 @@ const VideoCall = () => {
         </div>
 
         {loading ? (
-          <div className="p-6 text-gray-500">Loading...</div>
+          <div className="p-6 text-gray-400 font-electrolize">Loading...</div>
         ) : error ? (
-          <div className="p-6 text-red-500">{error}</div>
+          <div className="p-6 text-red-400 font-electrolize">{error}</div>
         ) : appointments.length === 0 ? (
-          <div className="p-6 text-gray-400">No online appointments</div>
+          <div className="p-6 text-gray-400 font-electrolize">No online appointments</div>
         ) : (
           appointments.map((a, idx) => (
             <div
               key={a._id}
-              className="flex flex-wrap justify-between sm:grid sm:grid-cols-[0.5fr_3fr_3fr_3fr_2fr_3fr] items-center text-gray-600 py-3 px-6 border-b hover:bg-gray-50"
+              className="flex flex-wrap justify-between sm:grid sm:grid-cols-[0.5fr_3fr_3fr_3fr_2fr_3fr] items-center text-white py-3 px-6 border-b border-white hover:bg-[#2A2A2A] font-electrolize"
             >
               <p className="max-sm:hidden">{idx + 1}</p>
 
               <div className="flex items-center gap-2 min-w-44">
                 <img
-                  className="w-8 h-8 rounded-full bg-gray-200 object-cover"
+                  className="w-12 h-12 rounded-full bg-gray-600 object-cover"
                   src={a.userData?.image}
                   alt={a.userData?.name}
                 />
@@ -120,7 +120,7 @@ const VideoCall = () => {
 
               <div className="flex items-center gap-2 min-w-44">
                 <img
-                  className="w-8 h-8 rounded-full bg-gray-200 object-cover"
+                  className="w-12 h-12 rounded-full bg-gray-600 object-cover"
                   src={a.docData?.image}
                   alt={a.docData?.name}
                 />
@@ -131,7 +131,7 @@ const VideoCall = () => {
                 <button
                   className={`px-4 py-2 rounded-full text-xs ${
                     a.videoCallLink
-                      ? "bg-green-500 text-white cursor-not-allowed"
+                      ? "bg-[#078448] text-white cursor-not-allowed"
                       : "bg-primary text-white hover:bg-primary/80"
                   }`}
                   disabled={!!a.videoCallLink}
@@ -148,12 +148,12 @@ const VideoCall = () => {
                       href={a.videoCallLink}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-blue-600 underline break-all"
+                      className="text-blue-400 underline break-all"
                     >
                       {a.videoCallLink}
                     </a>
                     <button
-                      className="text-xs border px-2 py-1 rounded hover:bg-gray-100 transition"
+                      className="text-xs border border-white px-2 py-1 rounded hover:bg-[#333] transition text-white"
                       onClick={() => copyToClipboard(a.videoCallLink)}
                     >
                       Copy
@@ -170,33 +170,35 @@ const VideoCall = () => {
 
       {modalOpen && selected && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-lg relative">
+          <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-md shadow-lg relative border border-white">
             <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-lg font-bold"
+              className="absolute top-3 right-3 text-gray-300 hover:text-white text-lg font-bold"
               onClick={closeModal}
             >
               &times;
             </button>
 
-            <h3 className="text-lg font-semibold mb-3">Video Call Link</h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <h3 className="text-lg font-semibold mb-3 text-white font-audiowide">
+              Video Call Link
+            </h3>
+            <p className="text-sm text-gray-300 mb-4 font-electrolize">
               {selected.userData?.name} • {slotDateFormat(selected.slotDate)}, {selected.slotTime}
               <br />
               Doctor: {selected.docData?.name}
             </p>
 
             {selected.videoCallLink ? (
-              <div className="mb-4 p-3 bg-gray-50 rounded">
+              <div className="mb-4 p-3 bg-[#2A2A2A] rounded border border-white">
                 <a
                   href={selected.videoCallLink}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-blue-600 underline break-all"
+                  className="text-blue-400 underline break-all"
                 >
                   {selected.videoCallLink}
                 </a>
                 <button
-                  className="text-xs border px-2 py-1 rounded ml-2 hover:bg-gray-100 transition"
+                  className="text-xs border border-white px-2 py-1 rounded ml-2 hover:bg-[#333] transition text-white"
                   onClick={() => copyToClipboard(selected.videoCallLink)}
                 >
                   Copy

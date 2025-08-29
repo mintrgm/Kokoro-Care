@@ -1,42 +1,118 @@
-import React from 'react'
-import { assets } from '../assets/assets'
+import React, { useCallback } from "react";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import { particlesOptions } from "./ParticlesConfig";
+import { assets } from "../assets/assets";
 
 const Footer = () => {
+  const particlesInit = useCallback(async (engine) => {
+    await loadFull(engine);
+  }, []);
+
   return (
-    <div className='md:mx-10'>
-        <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm'>
-            {/* Left Section */}
-            <div>
-                <img className='mb-5 w-40' src={assets.logo} alt="" />
-                <p className='w-full md:w-2/3 text-gray-600 leading-6'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-            </div>
-            {/* Center Section */}
-            <div>
-                <p className='text-xl font-medium mb-5'>COMPANY</p>
-                <ul className='flex flex-col gap-2 text-gray-600'>
-                    <li>Home</li>
-                    <li>About us</li>
-                    <li>Delivery</li>
-                    <li>Privacy policy</li>
-                </ul>
-            </div>
-            {/* Right Section */}
-            <div>
-                <p className='text-xl font-medium mb-5'>GET IN TOUCH</p>
-                <ul className='flex flex-col gap-2 text-gray-600'>
-                    <li>+91 1234567890</li>
-                    <li>codeatfreelance@gmail.com</li>
-                </ul>
-            </div>
-        </div>
-        {/* Copyright text */}
-        <div>
-            <hr />
-            <p className='py-5 text-center text-sm'>Copyright 2024 @ CodeAtFreelance.dev - All Right Reserved.</p>
+    <div className="relative bg-[#090A0A] text-white overflow-hidden">
+      <Particles
+        id="footerParticles"
+        className="absolute inset-0 z-0"
+        init={particlesInit}
+        options={particlesOptions}
+      />
+
+      <div className="grid md:grid-cols-2 relative z-10 items-end">
+        <div className="flex items-end justify-center pb-6 translate-y-10">
+          <img
+            src={assets.HH}
+            alt="HH"
+            className="w-[760px] h-auto object-contain"
+          />
         </div>
 
+        <div className="flex flex-col justify-between p-8">
+          <div>
+            <h2 className="font-autowide text-6xl mb-2 text-[#F8FBFF]">
+              Contact Us
+            </h2>
+            <p className="font-electro text-[#BAE7FF] mb-4">
+              Whether it’s a question, concern, or just a hello, we’re here to listen and help.
+            </p>
+
+            <div className="relative">
+              <img src={assets.Card} alt="Card" className="w-full" />
+
+              <form className="absolute top-1/2 transform -translate-y-1/2 w-full px-8 flex flex-col items-center gap-3 z-10">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className="w-3/4 border-b border-[#BAE7FF] bg-transparent text-white focus:outline-none py-2"
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="w-3/4 border-b border-[#BAE7FF] bg-transparent text-white focus:outline-none py-2"
+                />
+                <textarea
+                  placeholder="Message"
+                  className="w-3/4 border-b border-[#BAE7FF] bg-transparent text-white focus:outline-none py-2 resize-none"
+                  rows="3"
+                />
+                <button
+                  type="button"
+                  className="px-6 py-2 bg-[#090A0A] border border-[#BAE7FF] hover:bg-[#BAE7FF] hover:text-[#090A0A] transition rounded-md"
+                  onClick={() => alert("Message received!")}
+                >
+                  Send
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <hr className="border-[#BAE7FF] mb-2" />
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-[#BAE7FF]">
+                © 2025 Kokoro Care. All Rights Reserved.
+              </p>
+
+              <div className="flex gap-4">
+                <a
+                  href="https://www.instagram.com/_minto.draws_/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                >
+                  <img src={assets.Ig} alt="Instagram" className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://www.youtube.com/@mint-rgm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                >
+                  <img src={assets.Yt} alt="YouTube" className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/manita-thapa-90376718b/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                >
+                  <img src={assets.Li} alt="LinkedIn" className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://www.pinterest.com/mint0desu/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                >
+                  <img src={assets.Pt} alt="Pinterest" className="w-6 h-6" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

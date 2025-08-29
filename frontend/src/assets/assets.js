@@ -1,9 +1,3 @@
-import appointment_img from './appointment_img.png'
-import header_img from './header_img.png'
-import group_profiles from './group_profiles.png'
-import profile_pic from './profile_pic.png'
-import contact_image from './contact_image.png'
-import about_image from './about_image.png'
 import dropdown_icon from './dropdown_icon.svg'
 import menu_icon from './menu_icon.svg'
 import cross_icon from './cross_icon.png'
@@ -12,13 +6,12 @@ import verified_icon from './verified_icon.svg'
 import arrow_icon from './arrow_icon.svg'
 import info_icon from './info_icon.svg'
 import upload_icon from './upload_icon.png'
-import stripe_logo from './stripe_logo.png'
-import Dermatologist from './Dermatologist.svg'
-import Gastroenterologist from './Gastroenterologist.svg'
-import General_physician from './General_physician.svg'
-import Gynecologist from './Gynecologist.svg'
-import Neurologist from './Neurologist.svg'
-import Pediatricians from './Pediatricians.svg'
+import Dermatologist from './dr.png'
+import Gastroenterologist from './gas.png'
+import General_physician from './gp.png'
+import Gynecologist from './gy.png'
+import Neurologist from './nu.png'
+import Pediatricians from './pe.png'
 import Logo from './Logo.png'
 import Send from './send.png'
 import Help from './help.png'
@@ -33,26 +26,34 @@ import New from './new.png'
 import Linux from './linux.jpeg'
 import Close from './Close.png'
 import Upload from './Upload.png'
+import MainC from './mc.png'
+import Heart from './heart.png'
+import Card from './card.png'
+import Hand from './hand.png'
+import Robot from './robot.png'
+import HH from './HandHeart.png'
+import Ig from './ig.png'
+import Yt from './yt.png'
+import Li from './ld.png'
+import Pt from './pt.png'
+import About from './About.png'
+import Speed from './speed.png'
+import Care from './care.png'
+import Trust from './trust.png'
+import Slider from './slider.jpeg'
 
 export const assets = {
-    appointment_img,
-    header_img,
-    group_profiles,
     chats_icon,
     Logo,
     Send,
     Help,
     verified_icon,
     info_icon,
-    profile_pic,
     arrow_icon,
-    contact_image,
-    about_image,
     menu_icon,
     cross_icon,
     dropdown_icon,
     upload_icon,
-    stripe_logo,
     Baymax0,
     Baymax1,
     Baymax2,
@@ -63,7 +64,22 @@ export const assets = {
     New,
     Linux,
     Close,
-    Upload
+    Upload,
+    MainC,
+    Heart,
+    Card,
+    Hand,
+    Robot,
+    HH,
+    Ig,
+    Yt,
+    Li,
+    Pt,
+    About,
+    Speed,
+    Care,
+    Trust,
+    Slider
 }
 
 export const specialityData = [

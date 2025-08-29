@@ -1,19 +1,21 @@
-import add_icon from './add_icon.svg'
-import admin_logo from './admin_logo.svg'
-import appointment_icon from './appointment_icon.svg'
-import cancel_icon from './cancel_icon.svg'
-import doctor_icon from './doctor_icon.svg'
-import home_icon from './home_icon.svg'
-import people_icon from './people_icon.svg'
+import add_icon from './new.png'
+import admin_logo from './Logo.png'
+import appointment_icon from './app.png'
+import cancel_icon from './Close.png'
+import doctor_icon from './dr.png'
+import home_icon from './db.png'
+import people_icon from './dl.png'
 import upload_area from './upload_area.svg'
-import list_icon from './list_icon.svg'
-import tick_icon from './tick_icon.svg'
+import list_icon from './list.png'
+import tick_icon from './tick.png'
 import appointments_icon from './appointments_icon.svg'
-import earning_icon from './earning_icon.svg'
-import patient_icon from './patient_icon.svg'
-import patients_icon from './patients_icon.svg'
+import earning_icon from './M.png'
+import patient_icon from './pl.png'
+import patients_icon from './pt.png'
 import Delete from "./delete.png";
 import Edit from "./Edit.png";
+import Slider from "./slider.png";
+import VideoCall from "./vc.png";
 
 export const assets = {
     add_icon,
@@ -31,5 +33,7 @@ export const assets = {
     appointments_icon,
     earning_icon,
     Delete,
-    Edit
+    Edit,
+    Slider,
+    VideoCall
 }

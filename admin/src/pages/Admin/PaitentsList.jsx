@@ -70,7 +70,7 @@ const PatientsList = () => {
 
   return (
     <div className="m-5 max-h-[90vh] overflow-y-scroll">
-      <h1 className="text-lg font-medium">All Patients</h1>
+      <h1 className="text-lg font-medium text-white">All Patients</h1>
 
       <div className="flex flex-wrap w-full gap-4 pt-5 gap-y-6">
         {patients.map((patient) => (
@@ -87,10 +87,8 @@ const PatientsList = () => {
             )}
 
             <div className="p-4">
-              <p className="text-neutral-800 text-lg font-medium">
-                {patient.name}
-              </p>
-              <p className="text-zinc-600 text-sm">{patient.email}</p>
+              <p className="text-lg font-medium text-white">{patient.name}</p>
+              <p className="text-sm text-white">{patient.email}</p>
 
               <div className="mt-2 flex items-center gap-2 text-sm">
                 <button onClick={() => deletePatient(patient._id)}>
@@ -123,6 +121,7 @@ const PatientsList = () => {
       )}
     </div>
   );
+
 };
 
 export default PatientsList;

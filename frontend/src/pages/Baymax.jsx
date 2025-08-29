@@ -95,7 +95,7 @@ function Baymax() {
 
   const saveChatToDB = async (messages) => {
     try {
-      const res = await axios.post("/api/baymax/save-chat", {
+      const res = await axios.post("http://localhost:8000/api/baymax/save-chat", {
         userId: currentUser._id,
         chat: messages,
       });
