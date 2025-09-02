@@ -71,7 +71,7 @@ const DoctorAppointments = () => {
                   appointment.payment ? "border border-[#052F5F] text-[#052F5F]" : "border border-[#BAE7FF] text-[#BAE7FF]"
                 }`}
               >
-                {appointment.payment ? "Online" : "Cash"}
+                {appointment.payment ? "Online" : "Online"}
               </p>
             </div>
 

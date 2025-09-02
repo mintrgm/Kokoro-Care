@@ -41,6 +41,7 @@ import Speed from './speed.png'
 import Care from './care.png'
 import Trust from './trust.png'
 import Slider from './slider.jpeg'
+import Search from './search.png'
 
 export const assets = {
     chats_icon,
@@ -79,7 +80,8 @@ export const assets = {
     Speed,
     Care,
     Trust,
-    Slider
+    Slider,
+    Search
 }
 
 export const specialityData = [

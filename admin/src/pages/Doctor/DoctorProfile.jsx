@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { DoctorContext, AppContext } from "../../context/";
 import { toast } from "react-toastify";
 import axios from "axios";
-import DoctorPassword from "./DoctorPassword"; 
+import DoctorPassword from "./DoctorPassword";
 
 const DoctorProfile = () => {
   const { profile, getProfile, setProfile } = useContext(DoctorContext);
@@ -21,24 +21,30 @@ const DoctorProfile = () => {
 
   const address = profile.address || { line1: "", line2: "" };
 
+  // Update profile with image support
   const updateProfile = async () => {
     setLoading(true);
     try {
-      const updateData = {
-        docId: profile._id,
-        address: profile.address,
-        fees: profile.fees,
-        available: profile.available,
-        about: profile.about,
-        degree: profile.degree,
-        speciality: profile.speciality,
-        experience: profile.experience,
-      };
+      const formData = new FormData();
+      formData.append("docId", profile._id);
+      formData.append("degree", profile.degree || "");
+      formData.append("speciality", profile.speciality || "");
+      formData.append("experience", profile.experience || 0);
+      formData.append("about", profile.about || "");
+      formData.append("fees", profile.fees || 0);
+      formData.append("available", profile.available);
+      formData.append("addressLine1", profile.address?.line1 || "");
+      formData.append("addressLine2", profile.address?.line2 || "");
+
+      // If user selected a new file, send it
+      if (profile.newImageFile) {
+        formData.append("image", profile.newImageFile);
+      }
 
       const { data } = await axios.post(
         `${backEndUrl}/api/doctor/update-profile`,
-        updateData,
-        { withCredentials: true }
+        formData,
+        { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
       );
 
       if (data.success) {
@@ -59,14 +65,32 @@ const DoctorProfile = () => {
   return (
     <div className="flex flex-col m-5 max-w-5xl mx-auto text-white">
       <div className="flex flex-col sm:flex-row gap-6 bg-[#13191D] rounded-lg p-6">
-        <div className="flex-shrink-0 flex justify-center sm:justify-start">
+        
+        {/* Profile Image */}
+        <div className="flex-shrink-0 flex flex-col justify-center sm:justify-start items-center relative">
           <img
-            className="w-[20rem] h-[32rem] rounded-lg object-cover border-2 border-white"
-            src={profile.image}
+            className="w-[22rem] h-[34rem] rounded-lg object-cover border-2 border-white cursor-pointer"
+            src={profile.newImageFile ? URL.createObjectURL(profile.newImageFile) : profile.image}
             alt={profile.name}
+            onClick={() => isEdit && document.getElementById("photoInput").click()}
           />
+
+          {isEdit && (
+            <input
+              type="file"
+              id="photoInput"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                setProfile((prev) => ({ ...prev, newImageFile: file }));
+              }}
+            />
+          )}
         </div>
 
+        {/* Profile Details */}
         <div className="flex-1 flex flex-col gap-4">
           <div>
             <p className="text-3xl font-audiowide font-semibold">{profile.name}</p>
@@ -161,10 +185,7 @@ const DoctorProfile = () => {
                     className="border rounded px-2 py-1 text-black"
                     value={address.line1}
                     onChange={(e) =>
-                      setProfile((prev) => ({
-                        ...prev,
-                        address: { ...address, line1: e.target.value },
-                      }))
+                      setProfile((prev) => ({ ...prev, address: { ...address, line1: e.target.value } }))
                     }
                     placeholder="Line 1"
                   />
@@ -173,10 +194,7 @@ const DoctorProfile = () => {
                     className="border rounded px-2 py-1 text-black"
                     value={address.line2}
                     onChange={(e) =>
-                      setProfile((prev) => ({
-                        ...prev,
-                        address: { ...address, line2: e.target.value },
-                      }))
+                      setProfile((prev) => ({ ...prev, address: { ...address, line2: e.target.value } }))
                     }
                     placeholder="Line 2"
                   />

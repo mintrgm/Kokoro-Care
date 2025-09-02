@@ -295,11 +295,11 @@ const createCheckoutSession = async (req, res) => {
       mode: 'payment',
       line_items: [{
         price_data: {
-          currency: 'usd',
+          currency: 'npr',
           product_data: {
-            name: 'Doctor Appointment',
+            name: `Appointment with Dr. ${appointment.docData.name}`,
           },
-          unit_amount: 5000, 
+          unit_amount: appointment.docData.fees * 100, 
         },
         quantity: 1,
       }],

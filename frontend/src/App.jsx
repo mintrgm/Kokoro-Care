@@ -17,8 +17,8 @@ import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   const location = useLocation();
 
-  const hideHelpBot = location.pathname === "/login";
-  const hideFooter = location.pathname === "/baymax";
+  const hideHelpBot = location.pathname.includes("/login");
+  const hideFooter = location.pathname.includes("/baymax");
 
   return (
     <div className="w-full">
@@ -35,6 +35,7 @@ const App = () => {
         <Route path="/my-appointments" element={<MyAppointments />} />
         <Route path="/appointment/:docId" element={<Appointment />} />
       </Routes>
+
       {!hideHelpBot && <HelpBot />}
       {!hideFooter && <Footer />}
     </div>

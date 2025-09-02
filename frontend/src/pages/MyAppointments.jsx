@@ -38,7 +38,12 @@ const MyAppointments = () => {
     getUserAppointments();
     const paymentStatus = searchParams.get("payment");
     const appointmentId = searchParams.get("appointmentId");
-    if (paymentStatus === "success" && appointmentId) toast.success("Payment successful!");
+    if (paymentStatus === "success" && appointmentId) {
+      toast.success("Payment successful!");
+      setTimeout(() => {
+        getUserAppointments();
+      }, 2000);
+    }
   }, []);
 
   const cancelAppointment = async (appointmentId) => {
@@ -93,12 +98,11 @@ const MyAppointments = () => {
   };
 
   const getButtonStyles = (type, state) => {
-      const colors = {
-    video: "#074C84",
-    paid: "#078448",
-    cancel: "#84074B",
-  };
-
+    const colors = {
+      video: "#074C84",
+      paid: "#078448",
+      cancel: "#84074B",
+    };
     const isDone = state === "done";
 
     return {
@@ -136,28 +140,36 @@ const MyAppointments = () => {
             </div>
 
             <div className="flex flex-col gap-2 justify-end">
-              {appointment.type === "online" && appointment.videoCallLink && (
-                (() => {
-                  const { baseClass, style, hoverStyle } = getButtonStyles("video", appointment.isCompleted ? "done" : "");
-                  return (
-                    <button
-                      onClick={() => openModal(appointment)}
-                      className={baseClass}
-                      style={style}
-                      onMouseEnter={(e) => Object.assign(e.target.style, hoverStyle)}
-                      onMouseLeave={(e) =>
-                        Object.assign(e.target.style, { backgroundColor: style.backgroundColor, color: style.color })
-                      }
-                    >
-                      Video Call
+              {appointment.type === "online" && (
+                <>
+                  {appointment.videoCallLink ? (
+                    (() => {
+                      const { baseClass, style, hoverStyle } = getButtonStyles("video", appointment.isCompleted ? "done" : "");
+                      return (
+                        <button
+                          onClick={() => openModal(appointment)}
+                          className={baseClass}
+                          style={style}
+                          onMouseEnter={(e) => Object.assign(e.target.style, hoverStyle)}
+                          onMouseLeave={(e) =>
+                            Object.assign(e.target.style, { backgroundColor: style.backgroundColor, color: style.color })
+                          }
+                        >
+                          Video Call
+                        </button>
+                      );
+                    })()
+                  ) : (
+                    <button className="border border-white px-4 py-2 rounded font-electrolize text-white bg-gray-700 cursor-not-allowed">
+                      Generating link...
                     </button>
-                  );
-                })()
+                  )}
+                </>
               )}
 
               {appointment.isPaymentDone && !appointment.isCompleted && (
                 (() => {
-                  const { baseClass, style, hoverStyle } = getButtonStyles("paid", "done");
+                  const { baseClass, style } = getButtonStyles("paid", "done");
                   return <button className={baseClass} style={style}>Paid</button>;
                 })()
               )}

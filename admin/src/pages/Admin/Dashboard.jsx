@@ -1,7 +1,10 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AdminContext, AppContext } from "../../context/";
 import { assets } from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import axios from "axios";
 
 const Dashboard = () => {
   const { getDashboardData, dashData, cancelAppointment, appointments } =
@@ -9,9 +12,14 @@ const Dashboard = () => {
   const { slotDateFormat } = useContext(AppContext);
   const navigate = useNavigate();
   const statsRef = useRef(null);
+  const [helpbotAccuracy, setHelpbotAccuracy] = useState(0);
 
   useEffect(() => {
     getDashboardData();
+
+    axios.get("http://localhost:8001/helpbot/accuracy")
+      .then((res) => setHelpbotAccuracy(res.data.accuracy))
+      .catch((err) => console.error("Error fetching HelpBot accuracy:", err));
   }, [appointments]);
 
   if (!dashData) return null;
@@ -127,9 +135,23 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div ref={statsRef} className="mt-16 bg-[#090A0A] p-6 rounded border border-white">
-        <h2 className="text-xl font-audiowide text-[#F8FBFF] mb-4">Dashboard Stats</h2>
-        <p className="text-[#F8FBFF] opacity-70 font-electrolize">(Charts and analytics will go here...)</p>
+      <div ref={statsRef} className="mt-16 bg-[#090A0A] p-6 rounded border border-white flex flex-col items-center">
+        <h2 className="text-xl font-audiowide text-[#F8FBFF] mb-4">HelpBot Accuracy</h2>
+        <div className="w-40 h-40">
+          <CircularProgressbar
+            value={helpbotAccuracy}
+            text={`${helpbotAccuracy}%`}
+            styles={buildStyles({
+              textColor: "#F8FBFF",
+              pathColor: "#6FA8AD",
+              trailColor: "#2B2B2B",
+              textSize: "18px",
+            })}
+          />
+        </div>
+        <p className="text-[#F8FBFF] opacity-70 mt-2 font-electrolize">
+          Current accuracy of HelpBot based on the latest dataset
+        </p>
       </div>
     </div>
   );

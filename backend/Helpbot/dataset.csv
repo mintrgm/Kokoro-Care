@@ -4,9 +4,8 @@ hello,greeting
 hey,greeting
 good morning,greeting
 good evening,greeting
-howdy,greeting
 yo,greeting
-create an account,create_account
+create account,create_account
 sign up,create_account
 register me,create_account
 i want to create an account,create_account
@@ -39,8 +38,8 @@ change password,change_password
 reset password,change_password
 forgot password,change_password
 talk to baymax,talk_medical_bot
-medical help,baymax_medical
-i need medical advice,baymax_medical
+medical help,talk_medical_bot
+i need medical advice,talk_medical_bot
 cancel my appointment,cancel_appointment
 reschedule appointment,cancel_appointment
 i want to cancel my appointment,cancel_appointment
@@ -57,10 +56,12 @@ thx,thanks
 bye,goodbye
 goodbye,goodbye
 see you,goodbye
+later,goodbye
+i have a headache,unknown
+i want to book a math teacher,unknown
+school booking,unknown
 are you real,unknown
 who is your boss,unknown
 stupid question,unknown
-book a teacher,unknown
-school booking,unknown
 what is the meaning of life,unknown
 random question,unknown

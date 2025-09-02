@@ -23,7 +23,7 @@ const DoctorDashboard = () => {
           {
             icon: assets.earning_icon,
             label: "Earnings",
-            value: `${currency} ${dashboard.earnings}`,
+            value: `NRP ${dashboard.earnings}`,
             link: null, 
           },
           {

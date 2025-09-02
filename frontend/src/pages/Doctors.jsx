@@ -41,9 +41,11 @@ const Doctors = () => {
             className={`
               h-14 w-400 flex items-center justify-center
               rounded-full border-2 border-[#F8FBFF]
-              text-[#F8FBFF] font-audiowide
+              font-audiowide
               transition-all duration-300
-              ${activeFilter === spec ? "bg-[#F8FBFF] text-[#090A0A]" : "hover:bg-[#F8FBFF] hover:text-[#090A0A]"}
+              ${activeFilter === spec 
+                  ? "bg-[#F8FBFF] text-black" 
+                  : "text-[#F8FBFF] hover:bg-[#F8FBFF] hover:text-black"}
             `}
           >
             {spec}
